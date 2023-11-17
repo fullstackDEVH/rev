@@ -1,0 +1,39 @@
+import { useAppDispatch } from "@/redux/hooks";
+import { currentUserLogOut } from "@/redux/slices/authSlice";
+import Image from "next/image";
+
+const dropDownUser = [
+  "Thông tin tài khoản",
+  "Địa điểm đã lưu",
+  "Bài viết đã lưu",
+  "Đăng xuất",
+];
+
+export default function UserHeader() {
+  const dispatch = useAppDispatch();
+
+  const handleItemClick = (key: string) => {
+    if (key === "Đăng xuất") {
+      dispatch(currentUserLogOut());
+    }
+  };
+  
+  return (
+    <div className="relative group">
+      <div className="h-[50px] relative w-[50px] overflow-hidden rounded-full shadow-lg cursor-pointer">
+        <Image src="/avatar.png" alt="avatar" fill className="object-contain" />
+      </div>
+      <div className="absolute shadow-md z-10 w-[250px] rounded-lg top-full left-0 bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all ">
+        {dropDownUser.map((item) => (
+          <div
+            className="py-2 px-5 flex items-center cursor-pointer transition-all hover:text-second"
+            key={item}
+            onClick={() => handleItemClick(item)}
+          >
+            {item}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
