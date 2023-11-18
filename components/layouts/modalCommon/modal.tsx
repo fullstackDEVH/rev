@@ -15,7 +15,7 @@ export default function Modal({
   isOpen,
   children,
   commonStyles,
-  handleCloseModal,
+  handleCloseModal
 }: IProps) {
   return (
     <div

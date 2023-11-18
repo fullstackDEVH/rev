@@ -4,10 +4,20 @@ import Image from "next/image";
 import { BtnCommon, UserHeader } from "..";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setModalType } from "@/redux/slices/modalSlice";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
-  const { currentUser } = useAppSelector((state) => state.auth);
+  const { currentUser, access_token } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (access_token && !currentUser?._id) {
+      alert("Lấy thông tin user");
+    }
+  }, [access_token]);
 
   return (
     <div className="px-px-header">
@@ -39,8 +49,16 @@ export default function Header() {
 
           {currentUser?._id ? (
             <>
-              <BtnCommon title="Viết Riviu" commonStyles="" />
-              <BtnCommon title="Thêm Địa Điểm" commonStyles="" />
+              <BtnCommon
+                title="Viết Riviu"
+                commonStyles=""
+                handleClick={() => router.push("/review")}
+              />
+              <BtnCommon
+                title="Thêm Địa Điểm"
+                commonStyles=""
+                handleClick={() => dispatch(setModalType("CREATE_STORE"))}
+              />
               <UserHeader />
             </>
           ) : (

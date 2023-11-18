@@ -1,11 +1,22 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CardReview from "./cardReview";
+import { IReadStore } from "@/utils/interface";
+import { getStores } from "@/utils/proxy";
 
 const tags = ["Tất cả", "Ăn sáng", "Ăn trưa", "Ăn vặt", "Xu hướng"];
 
 export default function Reviews() {
   const [selectedTag, setSelectedTag] = useState("Tất cả");
+  const [stores, setStores] = useState<IReadStore[]>([]);
+
+  useEffect(() => {
+    const getDataStores = async () => {
+      const { data } = await getStores();
+      setStores(data.data)
+    };
+    getDataStores();
+  }, []);
 
   return (
     <div className="py-4">
@@ -57,30 +68,14 @@ export default function Reviews() {
         {/* list revieưs */}
         <div className="py-4">
           <div className="grid grid-cols-4 gap-4">
+            {
+              stores.map((store, index)=> (
+                <CardReview key={index} store={store} />
+
+              ))
+            }
             {/* 1 */}
-            <div className="flex flex-col gap-4">
-              <CardReview />
-              <CardReview />
-              <CardReview />
-            </div>
-            {/* 2 */}
-            <div className="flex flex-col gap-4">
-              <CardReview />
-              <CardReview />
-              <CardReview />
-            </div>
-            {/* 3 */}
-            <div className="flex flex-col gap-4">
-              <CardReview />
-              <CardReview />
-              <CardReview />
-            </div>
-            {/* 4 */}
-            <div className="flex flex-col gap-4">
-              <CardReview />
-              <CardReview />
-              <CardReview />
-            </div>
+           
           </div>
         </div>
       </div>

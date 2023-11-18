@@ -1,6 +1,11 @@
+import { IReadStore } from "@/utils/interface";
 import Image from "next/image";
 
-export default function CardReview() {
+interface IProps {
+  store: IReadStore;
+}
+
+export default function CardReview({ store }: IProps) {
   return (
     <div className="overflow-hidden rounded-lg shadow-md group cursor-pointer">
       {/* image */}
@@ -15,7 +20,7 @@ export default function CardReview() {
       {/* body */}
       <div className="p-2">
         <h2 className="font-semibold text-xl line-clamp-2 hover:text-primary transition-colors">
-          Bánh mì gánh thịt nướng - Q3
+          {store.name}
         </h2>
         <div className="flex items-center gap-2 mt-2">
           <Image

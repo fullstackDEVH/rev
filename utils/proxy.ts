@@ -18,3 +18,7 @@ export const userSignUpApi = async (
     name,
   });
 };
+
+export const getStores = async () => {
+  return await axiosNonAuth.get("/stores");
+};

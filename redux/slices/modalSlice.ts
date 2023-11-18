@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export type TYPE_MODAL = "LOGIN" | "SIGN_UP";
+export type TYPE_MODAL = "LOGIN" | "SIGN_UP" | "CREATE_STORE";
 
 interface IInitstates {
   typeModal: TYPE_MODAL | null;
@@ -20,7 +20,7 @@ const modalSlice = createSlice({
       state,
       action: {
         type: string;
-        payload: TYPE_MODAL;
+        payload: TYPE_MODAL | null;
       }
     ) => {
       //

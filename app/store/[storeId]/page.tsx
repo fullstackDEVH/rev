@@ -1,11 +1,11 @@
 "use client";
 
 import CardComment from "@/components/commons/cardComment";
-import CardFoodStore from "@/components/commons/cardFoodStore";
 import CardOutstanding from "@/components/commons/cardOutstanding";
 import Image from "next/image";
 
 export default function StoreDetail() {
+
   return (
     <div className="px-px-body py-8">
       {/* common detail */}

@@ -4,10 +4,14 @@ import CardFoodStore from "@/components/commons/cardFoodStore";
 import CardOutstanding from "@/components/commons/cardOutstanding";
 import CardUserOutstanding from "@/components/commons/cardUserStanding";
 import Reviews from "@/components/commons/reviews";
+import { useAppSelector } from "@/redux/hooks";
+
 import Image from "next/image";
 
 export default function Home() {
-  const isLogin = true;
+  const { currentUser } = useAppSelector((state) => state.auth);
+ 
+
   return (
     <main className="px-px-body flex gap-8 min-h-screen py-8">
       <div className="w-[70%]">
@@ -35,6 +39,7 @@ export default function Home() {
 
           {/* lisst store by */}
           <div className="grid grid-cols-3 gap-4">
+
             <CardFoodStore />
             <CardFoodStore />
             <CardFoodStore />
@@ -48,7 +53,7 @@ export default function Home() {
       <div className="w-[30%]">
         {/* user */}
         <div className="bg-white rounded-xl p-4 shadow-lg">
-          {isLogin ? (
+          {currentUser ? (
             <div>
               <div className="flex gap-3">
                 <div className="relative h-full w-[30%] aspect-[1/1]">
@@ -60,8 +65,10 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <h4 className="text-txt-primary text-lg">Đỗ Thành Nhân</h4>
-                  <p>nhan@gmail.com</p>
+                  <h4 className="text-txt-primary text-lg">
+                    {currentUser.name}
+                  </h4>
+                  <p>{currentUser.email}</p>
                 </div>
               </div>
             </div>
