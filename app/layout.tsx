@@ -23,15 +23,17 @@ export default function RootLayout({
       <body className={inter.className}>
         <ReduxProvider>
           <Header />
-          <div className="relative h-[150px]">
-            <Image
-              src="/banner-top.png"
-              alt="banner top"
-              fill
-              className="object-cover"
-            />
+          <div className="bg-[#f9f9f9]">
+            <div className="relative h-[150px]">
+              <Image
+                src="/banner-top.png"
+                alt="banner top"
+                fill
+                className="object-cover"
+              />
+            </div>
+            {children}
           </div>
-          {children}
           <ModalProvider />
         </ReduxProvider>
       </body>

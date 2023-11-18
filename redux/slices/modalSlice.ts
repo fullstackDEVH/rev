@@ -8,7 +8,7 @@ interface IInitstates {
 }
 
 const initialState: IInitstates = {
-  typeModal: "LOGIN",
+  typeModal: null,
   isOpen: false,
 };
 
