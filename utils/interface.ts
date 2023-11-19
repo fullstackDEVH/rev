@@ -15,8 +15,7 @@ export interface ICreateStore {
   open_time: string;
   close_time: string;
   address: string;
-  owner: string; // Đảm bảo rằng bạn có ID của chủ cửa hàng
-  images?: any;
+  images: FileList;
   phone_number: string;
   price_highest: string;
   price_lowest: string;
@@ -38,4 +37,44 @@ export interface ICreateReview {
     smell: number;
     food_safety: number;
   };
+}
+
+export interface IReview {
+  rating: {
+    serve: number;
+    price: number;
+    space: number;
+    smell: number;
+    food_safety: number;
+  };
+  _id: string;
+  author: string;
+  store: string;
+  title: string;
+  content: string;
+  images: string[];
+  created_at: string;
+}
+export interface IStore {
+  _id: string;
+  name: string;
+  slogan: string;
+  cuisine_national: string;
+  images: string[];
+  open_time: string;
+  close_time: string;
+  price_highest: number;
+  price_lowest: number;
+  address: string;
+  owner: string;
+}
+export interface IStoreDetail {
+  serve: number;
+  price: number;
+  food_safety: number;
+  space: number;
+  smell: number;
+  total_rating: number;
+  foundReviews: IReview[];
+  foundStore: IStore;
 }

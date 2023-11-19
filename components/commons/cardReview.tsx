@@ -1,5 +1,6 @@
 import { IReadStore } from "@/utils/interface";
 import Image from "next/image";
+import Link from "next/link";
 
 interface IProps {
   store: IReadStore;
@@ -7,7 +8,10 @@ interface IProps {
 
 export default function CardReview({ store }: IProps) {
   return (
-    <div className="overflow-hidden rounded-lg shadow-md group cursor-pointer">
+    <Link
+      href={`/store/${store._id}`}
+      className="overflow-hidden rounded-lg shadow-md group cursor-pointer"
+    >
       {/* image */}
       <div className="relative h-[150px] overflow-hidden">
         <Image
@@ -57,6 +61,6 @@ export default function CardReview({ store }: IProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -1,3 +1,4 @@
+import { saveAuthToken } from "@/utils/api";
 import { getCookie, removeCookie, setCookie } from "@/utils/common";
 import { IUser } from "@/utils/interface";
 import { createSlice } from "@reduxjs/toolkit";
@@ -40,7 +41,9 @@ const authSlice = createSlice({
     ) => {
       state.access_token = action.payload.access_token;
       state.currentUser = action.payload.user;
-      setCookie("access_token", action.payload.access_token);
+    },
+    setUserMe : (state, action) => {
+      state.currentUser = action.payload
     },
     setToken: (state, action) => {
       state.access_token = action.payload;
@@ -65,5 +68,6 @@ export const {
   setToken,
   currentUserLogOut,
   setCurrentUserLogin,
+  setUserMe
 } = authSlice.actions;
 export default authSlice.reducer;

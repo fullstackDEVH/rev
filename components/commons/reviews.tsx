@@ -71,7 +71,6 @@ export default function Reviews() {
             {
               stores.map((store, index)=> (
                 <CardReview key={index} store={store} />
-
               ))
             }
             {/* 1 */}

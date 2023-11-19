@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { userLogin as userLoginApi } from "@/utils/proxy";
 import { setCurrentUserLogin } from "@/redux/slices/authSlice";
+import { saveAuthToken } from "@/utils/api";
 
 export default function ModalLogin() {
   const [userLogin, setUserLogin] = useState({
@@ -43,6 +44,8 @@ export default function ModalLogin() {
           user: data.user,
         })
       );
+      saveAuthToken(data.token);
+
       dispatch(removeModalType());
       alert("Thành công");
     } catch (error) {

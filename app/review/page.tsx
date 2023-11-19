@@ -4,10 +4,11 @@ import { BtnCommon } from "@/components";
 import StarRatings from "@/components/commons/starRating";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setModalType } from "@/redux/slices/modalSlice";
-import { axiosAuthCookieMultiData, axiosNonAuth } from "@/utils/api";
-import { ICreateReview } from "@/utils/interface";
+import { RootState } from "@/redux/store";
+import { axiosNonAuth } from "@/utils/api";
+import { uploadImagesReview } from "@/utils/proxy";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 
 export default function WriteReview() {
@@ -25,10 +26,12 @@ export default function WriteReview() {
     },
   });
   const [imgsBlob, setImgsBlob] = useState<string[]>([]);
-  const { currentUser } = useAppSelector((state) => state.auth);
+  const { currentUser } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const storeId = searchParams.get("storeId");
 
   useEffect(() => {
     return () => {
@@ -41,7 +44,6 @@ export default function WriteReview() {
   const isFormValid = () => {
     // Kiểm tra tất cả các trường dữ liệu có giá trị không rỗng
     for (const key in reviewData) {
-      if (key === "owner") return true;
       if (!reviewData[key as keyof typeof reviewData]) {
         return false;
       }
@@ -62,16 +64,15 @@ export default function WriteReview() {
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
-    const imgs =
-      files && Array.from(files).map((file) => URL.createObjectURL(file));
-    imgs && setImgsBlob(imgs);
-
     if (files) {
       setReviewData({
         ...reviewData,
         images: files,
       });
     }
+    const imgs =
+      files && Array.from(files).map((file) => URL.createObjectURL(file));
+    imgs && setImgsBlob(imgs);
   };
 
   const handleSubmit = async () => {
@@ -88,34 +89,25 @@ export default function WriteReview() {
 
     setIsLoading(true);
     try {
-      // const arrImgs = Array.from(reviewData.images);
-
-      // arrImgs.forEach((file: any, index: number) => {
-      //   let arrs = file.name.split(".");
-      //   let preFix = arrs[arrs.length - 1];
-
-      //   formData.append(
-      //     `images`,
-      //     file,
-      //     `${currentUser?._id.substring(0, 4)}-${Math.floor(
-      //       Math.random() * 1000
-      //     )}-${index}.${preFix}`
-      //   );
-      // });
-      delete reviewData["images"];
-
+      const { images, ...newReviewData } = reviewData;
       const { data } = await axiosNonAuth.post("/reviews", {
-        ...reviewData,
-        store: "6558ffaf960821a16f48b0ff",
+        ...newReviewData,
+        store: storeId,
         author: currentUser._id,
       });
 
-      // reviewId : data.data._id
-      // upload ảnh
+      const arrImgs = Array.from(images);
+      const formData = new FormData();
+
+      arrImgs.forEach((file: any) => {
+        formData.append(`images`, file);
+      });
+
+      await uploadImagesReview(data.data._id, formData);
 
       alert("Tạo thành công");
       dispatch(setModalType(null));
-      router.push(`/store/store._id`);
+      router.push(`/store/${storeId}`);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -154,7 +146,14 @@ export default function WriteReview() {
 
             {/* images */}
             <div className="mt-6">
-              <div className="grid grid-cols-5 gap-3">
+              <div className="grid grid-cols-5 gap-3 relative">
+                <>
+                  {imgsBlob.length > 4 ? (
+                    <p className="absolute z-10 bg-[#00000070] p-2 text-lg font-medium rounded-full bottom-4 right-4 text-white">
+                      {imgsBlob.length - 4}
+                    </p>
+                  ) : null}
+                </>
                 <label className="aspect-[1/1] rounded-xl border border-dotted flex items-center flex-col justify-center gap-2">
                   <Image src="/lanscape.svg" alt="" width={34} height={34} />
                   <span className="text-lg">Tải ảnh lên</span>
@@ -168,7 +167,7 @@ export default function WriteReview() {
                     className="hidden"
                   />
                 </label>
-                {imgsBlob.slice(0, 5).map((blob, index) => (
+                {imgsBlob.slice(0, 4).map((blob, index) => (
                   <div
                     key={index}
                     className="aspect-[1/1] relative rounded-xl overflow-hidden shadow"

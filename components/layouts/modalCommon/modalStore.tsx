@@ -9,6 +9,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { ICreateStore } from "@/utils/interface";
 import { generateTimeOptions } from "@/utils/common";
 import { axiosAuthCookieMultiData } from "@/utils/api";
+import { uploadImagesStore } from "@/utils/proxy";
 
 interface IProvice {
   code: string;
@@ -43,7 +44,6 @@ export default function ModalStore() {
     open_time: "08:00",
     close_time: "08:00",
     address: "",
-    owner: "",
     phone_number: "",
     images: null as any,
     price_lowest: "",
@@ -54,7 +54,6 @@ export default function ModalStore() {
   const isFormValid = () => {
     // Kiểm tra tất cả các trường dữ liệu có giá trị không rỗng
     for (const key in storeData) {
-      if (key === "owner") return true;
       if (!storeData[key as keyof typeof storeData]) {
         console.log(key);
 
@@ -141,33 +140,23 @@ export default function ModalStore() {
 
     setIsLoading(true);
     try {
+      const { images, ...newStoreData } = storeData;
+
+      const { data } = await axiosAuthCookieMultiData.post("/stores", {
+        ...newStoreData,
+        owner: currentUser._id,
+      });
+
       const formData = new FormData();
-      formData.append("name", storeData.name);
-      formData.append("slogan", storeData.slogan);
-      formData.append("cuisine_national", storeData.cuisine_national);
-      formData.append("open_time", storeData.open_time);
-      formData.append("close_time", storeData.close_time);
-      formData.append("price_lowest", storeData.price_lowest);
-      formData.append("price_highest", storeData.price_highest);
-      formData.append("address", storeData.address);
-      formData.append("owner", currentUser?._id);
 
       const arrImgs = Array.from(storeData.images);
 
-      arrImgs.forEach((file: any, index: number) => {
-        let arrs = file.name.split(".");
-        let preFix = arrs[arrs.length - 1];
-
-        formData.append(
-          `images`,
-          file,
-          `${currentUser?._id.substring(0, 4)}-${Math.floor(
-            Math.random() * 1000
-          )}-${index}.${preFix}`
-        );
+      arrImgs.forEach((file: any) => {
+        formData.append(`images`, file);
       });
 
-      await axiosAuthCookieMultiData.post("/stores", formData);
+      await uploadImagesStore(data.data._id, formData);
+
       alert("Tạo thành công");
       dispatch(setModalType(null));
     } catch (error) {

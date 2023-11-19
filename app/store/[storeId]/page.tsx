@@ -1,10 +1,32 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import CardComment from "@/components/commons/cardComment";
 import CardOutstanding from "@/components/commons/cardOutstanding";
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { getStoreById } from "@/utils/proxy";
+import { IStoreDetail } from "@/utils/interface";
+import { baseURL } from "@/utils/api";
 
 export default function StoreDetail() {
+  const router = useRouter();
+  const params = useParams();
+  const storeId = params.storeId as string;
+
+  const [storeDetail, setStoreDetail] = useState<IStoreDetail>();
+
+  useEffect(() => {
+    const getStoreDetail = async () => {
+      try {
+        const { data } = await getStoreById(storeId);
+        setStoreDetail(data.data);
+      } catch (error: any) {
+        alert(`${error?.response?.data?.error ?? "Lỗi rồi"}`);
+      }
+    };
+    getStoreDetail();
+  }, []);
 
   return (
     <div className="px-px-body py-8">
@@ -15,7 +37,7 @@ export default function StoreDetail() {
           <div className="flex gap-4">
             <div className="relative w-24 h-24 rounded-xl overflow-hidden">
               <Image
-                src="/banner-main.png"
+                src={`${baseURL}/stores/image/${storeId}/${storeDetail?.foundStore.images[0]}`}
                 alt="banner"
                 fill
                 className="object-cover"
@@ -23,10 +45,10 @@ export default function StoreDetail() {
             </div>
             <div>
               <h2 className="text-txt-primary text-3xl font-semibold">
-                Spicy Box - Tokbokki Hot Pot - Giga Mall
+                {storeDetail?.foundStore.name}
               </h2>
               <p className="text-second font-medium text-lg mt-3">
-                Ăn uống đê mê
+                {storeDetail?.foundStore.slogan}
               </p>
             </div>
           </div>
@@ -41,7 +63,9 @@ export default function StoreDetail() {
                 width={20}
                 height={20}
               />
-              <h5 className="font-semibold text-lg text-txt-primary">4.5</h5>
+              <h5 className="font-semibold text-lg text-txt-primary">
+                {storeDetail?.total_rating}
+              </h5>
               <span>/ 5 điểm</span>
             </div>
             {/* ratings */}
@@ -50,7 +74,7 @@ export default function StoreDetail() {
                 <span className="font-medium text-txt-second text-lg">
                   Phục vụ :
                 </span>
-                4.4
+                {storeDetail?.serve}
                 <Image
                   src="/star_icon.svg"
                   alt="star_icon"
@@ -63,7 +87,7 @@ export default function StoreDetail() {
                 <span className="font-medium text-txt-second text-lg">
                   Giá cả :{" "}
                 </span>
-                4.4
+                {storeDetail?.price}
                 <Image
                   src="/star_icon.svg"
                   alt="star_icon"
@@ -75,7 +99,8 @@ export default function StoreDetail() {
                 <span className="font-medium text-txt-second text-lg">
                   Không gian :{" "}
                 </span>
-                4.4
+                {storeDetail?.space}
+
                 <Image
                   src="/star_icon.svg"
                   alt="star_icon"
@@ -87,7 +112,8 @@ export default function StoreDetail() {
                 <span className="font-medium text-txt-second text-lg">
                   Hương vị :{" "}
                 </span>
-                4.4
+                {storeDetail?.smell}
+
                 <Image
                   src="/star_icon.svg"
                   alt="star_icon"
@@ -100,7 +126,8 @@ export default function StoreDetail() {
                 <span className="font-medium text-txt-second text-lg">
                   Vệ sinh :{" "}
                 </span>
-                4.4
+                {storeDetail?.food_safety}
+
                 <Image
                   src="/star_icon.svg"
                   alt="star_icon"
@@ -120,10 +147,7 @@ export default function StoreDetail() {
                   height={20}
                 />
                 <span>Địa chỉ:</span>
-                <p>
-                  L5-22, Tầng 5, Giga Mall, 242 Phạm Văn Đồng, P. Hiệp Bình
-                  Chánh, Quận Thủ Đức, Hồ Chí Minh
-                </p>
+                <p>{storeDetail?.foundStore.address}</p>
               </div>
               {/* price infor */}
 
@@ -135,14 +159,20 @@ export default function StoreDetail() {
                   height={20}
                 />
                 <span>Giá tiền:</span>
-                <p>79.000VND - 224.000VND</p>
+                <p>
+                  {storeDetail?.foundStore.price_lowest}
+                  VND - {storeDetail?.foundStore.price_highest}VND
+                </p>
               </div>
               {/* time infor */}
               <div className="flex gap-3 text-lg text-txt-primary font-medium">
                 <Image src="/time.svg" alt="star_icon" width={20} height={20} />
                 <span>Thời gian:</span>
                 <span className="text-second">Đang mở cửa</span>
-                <span>(9:00 - 22:00)</span>
+                <span>
+                  ({storeDetail?.foundStore.open_time} -{" "}
+                  {storeDetail?.foundStore.close_time})
+                </span>
               </div>
             </div>
           </div>
@@ -150,8 +180,15 @@ export default function StoreDetail() {
 
         {/* images */}
         <div>
-          <div className="grid grid-cols-4 w-full aspect-[3/1] gap-3">
-            {Array.from({ length: 5 }).map((_, index) => (
+          <div className="grid grid-cols-4 w-full aspect-[3/1] gap-3 relative">
+            <>
+              {storeDetail && storeDetail?.foundStore?.images.length > 5 ? (
+                <p className="absolute z-10 bg-[#00000070] p-4 text-2xl font-medium rounded-full bottom-6 left-6 text-white">
+                  {storeDetail?.foundStore?.images?.length - 5}
+                </p>
+              ) : null}
+            </>
+            {storeDetail?.foundStore.images.slice(1, 7).map((image, index) => (
               <div
                 className={`relative ${
                   index === 0
@@ -161,7 +198,7 @@ export default function StoreDetail() {
                 key={index}
               >
                 <Image
-                  src={`/banner-main.png`}
+                  src={`${baseURL}/stores/image/${storeId}/${image}`}
                   alt={index + ""}
                   fill
                   className="object-cover"
@@ -178,19 +215,27 @@ export default function StoreDetail() {
           {/* heading */}
           <div className="flex justify-between items-center">
             <h4 className="text-txt-primary text-2xl font-semibold">
-              Đánh giá từ cộng đồng (50)
+              Đánh giá từ cộng đồng ({storeDetail?.foundReviews.length})
             </h4>
-            <div className="py-4 px-6 text-lg font-semibold cursor-pointer bg-primary text-center text-white shadow rounded-2xl hover:opacity-80 transition-opacity">
+            <div
+              className="py-4 px-6 text-lg font-semibold cursor-pointer bg-primary text-center text-white shadow rounded-2xl hover:opacity-80 transition-opacity"
+              onClick={() => router.push(`/review?storeId=${storeId}`)}
+            >
               Riviu địa điểm này
             </div>
           </div>
 
           {/* comments */}
           <div className="grid grid-cols-1 gap-6 mt-6">
-            <CardComment />
-            <CardComment />
-            <CardComment />
-            <CardComment />
+            {storeDetail?.foundReviews.length ? (
+              storeDetail?.foundReviews.map((review, index) => (
+                <CardComment review={review} key={index} />
+              ))
+            ) : (
+              <div className="text-xl text-center pt-6">
+                Hãy là người đầu tiên rìviu địa điểm này.
+              </div>
+            )}
           </div>
         </div>
         <div className="w-[30%]">

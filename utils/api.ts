@@ -3,7 +3,7 @@ import store from "@/redux/store";
 import { getCookie, setCookie } from "@/utils/common";
 // import { showToast } from '@/utils/helpers/toastify';
 import axios from "axios";
-const baseURL = "http://localhost:4000/api";
+export const baseURL = "http://localhost:4000/api";
 const myCookieValue = getCookie("token");
 
 export const axiosNonAuth = axios.create({
@@ -44,7 +44,7 @@ loadAuthToken();
 // Set token vào cookie và axiosAuthCookie'
 
 export const saveAuthToken = (token: string) => {
-  setCookie("token", token, { expires: 1 });
+  setCookie("access_token", token, { expires: 1 });
   setAuthToken(token);
 };
 

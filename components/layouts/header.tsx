@@ -6,6 +6,9 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setModalType } from "@/redux/slices/modalSlice";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { getCurrentUser } from "@/utils/proxy";
+import { setUserMe } from "@/redux/slices/authSlice";
+import Link from "next/link";
 
 export default function Header() {
   const { currentUser, access_token } = useAppSelector((state) => state.auth);
@@ -15,16 +18,24 @@ export default function Header() {
 
   useEffect(() => {
     if (access_token && !currentUser?._id) {
-      alert("Lấy thông tin user");
+      const getUser = async () => {
+        try {
+          const { data } = await getCurrentUser();
+          dispatch(setUserMe(data.data));
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getUser();
     }
   }, [access_token]);
 
   return (
     <div className="px-px-header">
       <div className="flex items-center h-[110px] justify-between">
-        <div className="relative w-[120px] h-[80px]">
+        <Link href={'/'} className="relative w-[120px] h-[80px]">
           <Image src="/logo.png" alt="logo" fill className="object-contain" />
-        </div>
+        </Link>
 
         <div className="flex gap-5 h-[50px]">
           {/* input search */}
