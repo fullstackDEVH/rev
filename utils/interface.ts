@@ -23,6 +23,7 @@ export interface ICreateStore {
 }
 export interface IReadStore extends ICreateStore {
   _id: string;
+  owner: IUser;
 }
 
 export interface ICreateReview {

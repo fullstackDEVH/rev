@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export type TYPE_MODAL = "LOGIN" | "SIGN_UP" | "CREATE_STORE";
+export type TYPE_MODAL = "LOGIN" | "SIGN_UP" | "CREATE_STORE" | "UPDATE_AVATAR";
 
 interface IInitstates {
   typeModal: TYPE_MODAL | null;

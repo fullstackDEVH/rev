@@ -3,18 +3,19 @@
 import CardFoodStore from "@/components/commons/cardFoodStore";
 import CardOutstanding from "@/components/commons/cardOutstanding";
 import CardUserOutstanding from "@/components/commons/cardUserStanding";
-import Reviews from "@/components/commons/reviews";
+import Stores from "@/components/commons/stores";
+import Reviews from "@/components/commons/stores";
 import { useAppSelector } from "@/redux/hooks";
+import { baseURL } from "@/utils/api";
 
 import Image from "next/image";
 
 export default function Home() {
   const { currentUser } = useAppSelector((state) => state.auth);
- 
 
   return (
     <main className="px-px-body flex gap-8 min-h-screen py-8">
-      <div className="w-[70%]">
+      <div className="w-[67%]">
         {/* banner */}
         <div className="relative h-[350px] rounded-xl overflow-hidden">
           <Image
@@ -39,36 +40,58 @@ export default function Home() {
 
           {/* lisst store by */}
           <div className="grid grid-cols-3 gap-4">
-
             <CardFoodStore />
             <CardFoodStore />
             <CardFoodStore />
           </div>
         </div>
 
-        {/* posts review */}
-        <Reviews />
+        {/* danh sách cửa hàng */}
+        <Stores />
       </div>
 
-      <div className="w-[30%]">
+      <div className="w-[33%]">
         {/* user */}
         <div className="bg-white rounded-xl p-4 shadow-lg">
           {currentUser ? (
             <div>
-              <div className="flex gap-3">
-                <div className="relative h-full w-[30%] aspect-[1/1]">
+              <div className="flex items-center gap-4 pb-4">
+                <div className="relative h-full w-[20%] aspect-[1/1]">
                   <Image
-                    src="/banner-main.png"
+                    src={
+                      currentUser?.avatar
+                        ? `${baseURL}/users/avatar/${currentUser?.avatar}`
+                        : "/avatar.png"
+                    }
                     alt="banner"
                     fill
                     className="object-cover rounded-full"
                   />
                 </div>
                 <div>
-                  <h4 className="text-txt-primary text-lg">
+                  <h4 className="text-txt-primary text-2xl font-semibold flex justify-center gap-3 flex-col">
                     {currentUser.name}
                   </h4>
                   <p>{currentUser.email}</p>
+                </div>
+              </div>
+
+              <div className="border-t pt-4">
+                <div className="flex items-center justify-center gap-4">
+                  <div className="text-center text-xl ">
+                    <div className="text-txt-primary font-semibold">7</div>
+                    <p className="text-txt-second font-medium">Bài viết</p>
+                  </div>
+                  <div className="text-center text-xl ">
+                    <div className="text-txt-primary font-semibold">1</div>
+                    <p className="text-txt-second font-medium">
+                      Người theo dõi
+                    </p>
+                  </div>
+                  <div className="text-center text-xl ">
+                    <div className="text-txt-primary font-semibold">1</div>
+                    <p className="text-txt-second font-medium">Đang theo dõi</p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -60,11 +60,11 @@ export default function Header() {
 
           {currentUser?._id ? (
             <>
-              <BtnCommon
+              {/* <BtnCommon
                 title="Viết Riviu"
                 commonStyles=""
                 handleClick={() => router.push("/review")}
-              />
+              /> */}
               <BtnCommon
                 title="Thêm Địa Điểm"
                 commonStyles=""

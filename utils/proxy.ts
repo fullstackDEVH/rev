@@ -56,3 +56,11 @@ export const uploadImagesStore = async (
     formData
   );
 };
+
+export const uploadAvatar = async (userId: string, formData: FormData) => {
+  return await axiosAuthCookieMultiData.post(
+    `/users/upload/${userId}`,
+    formData
+  );
+};
+

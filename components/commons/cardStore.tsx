@@ -1,3 +1,4 @@
+import { baseURL } from "@/utils/api";
 import { IReadStore } from "@/utils/interface";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,17 +7,17 @@ interface IProps {
   store: IReadStore;
 }
 
-export default function CardReview({ store }: IProps) {
+export default function CardStore({ store }: IProps) {
   return (
     <Link
       href={`/store/${store._id}`}
-      className="overflow-hidden rounded-lg shadow-md group cursor-pointer"
+      className="overflow-hidden rounded-lg shadow-md group cursor-pointer border-[2px] hover:border-primary"
     >
       {/* image */}
       <div className="relative h-[150px] overflow-hidden">
         <Image
-          src="/banner-main.png"
-          alt=""
+          src={`${baseURL}/stores/image/${store._id}/${store.images[0]}`}
+          alt="banner"
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -35,7 +36,7 @@ export default function CardReview({ store }: IProps) {
             className="rounded-full shadow-md"
           />
           <p className="line-clamp-1 font-medium hover:text-primary transition-colors">
-            Rùa tham ăn
+            {store.owner.name}
           </p>
         </div>
         <div className="mt-2 flex items-center justify-between">

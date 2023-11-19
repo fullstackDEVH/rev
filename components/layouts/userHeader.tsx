@@ -1,6 +1,7 @@
 import { useAppDispatch } from "@/redux/hooks";
 import { currentUserLogOut } from "@/redux/slices/authSlice";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const dropDownUser = [
   "Thông tin tài khoản",
@@ -11,13 +12,16 @@ const dropDownUser = [
 
 export default function UserHeader() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleItemClick = (key: string) => {
     if (key === "Đăng xuất") {
       dispatch(currentUserLogOut());
+    } else if (key === "Thông tin tài khoản") {
+      router.push("/user/profile");
     }
   };
-  
+
   return (
     <div className="relative group">
       <div className="h-[50px] relative w-[50px] overflow-hidden rounded-full shadow-lg cursor-pointer">
