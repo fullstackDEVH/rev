@@ -7,6 +7,8 @@ import { removeModalType, setModalType } from "@/redux/slices/modalSlice";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { uploadAvatar } from "@/utils/proxy";
+import { useRouter } from "next/navigation";
+import { setUserMe } from "@/redux/slices/authSlice";
 
 export default function ModalUpdateAvatar() {
   const [avatar, setAvatar] = useState<any | null>(null);
@@ -16,6 +18,8 @@ export default function ModalUpdateAvatar() {
 
   const { typeModal } = useAppSelector((state) => state.modal);
   const { currentUser } = useAppSelector((state) => state.auth);
+
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
   // xử lý người dùng đăng nhập
@@ -30,8 +34,11 @@ export default function ModalUpdateAvatar() {
       const formData = new FormData();
       formData.append("avatar", avatar);
       const { data } = await uploadAvatar(currentUser._id, formData);
-      //   dispatch(removeModalType());
-      //   alert("Thành công");
+      console.log(data.data);
+      
+
+      dispatch(setUserMe({ ...currentUser, avatar: data.data }));
+      dispatch(removeModalType());
     } catch (error) {
       console.log("error : ", error);
       alert("thất bại");
@@ -46,6 +53,16 @@ export default function ModalUpdateAvatar() {
       setBlob(URL.createObjectURL(e?.target?.files?.[0]));
   };
 
+  const handleCancelModal = (action: "cancel" | "exit") => {
+    if (action === "cancel") {
+      blob && URL.revokeObjectURL(blob);
+      setAvatar(null);
+      setBlob(null);
+    } else {
+      dispatch(setModalType(null));
+    }
+  };
+
   return (
     <Modal
       isOpen={typeModal === "UPDATE_AVATAR" ? true : false}
@@ -53,10 +70,15 @@ export default function ModalUpdateAvatar() {
       commonStyles="max-w-[700px]"
       title="Chỉnh sửa ảnh đại diện"
     >
-      <div className="h-[40vh] flex flex-col">
+      <div className="h-[40vh] flex flex-col items-center">
         {blob ? (
           <div className="w-[80%] h-[60%] relative">
-            <Image src={blob} alt="avatar blob" fill />
+            <Image
+              src={blob}
+              alt="avatar blob"
+              fill
+              className="object-contain"
+            />
           </div>
         ) : (
           <>
@@ -80,15 +102,20 @@ export default function ModalUpdateAvatar() {
         )}
 
         <div className="w-full mt-auto text-right cursor-pointer flex gap-3 justify-end">
-          {/* <div className="p-3 font-semibold rounded-xl text-xl text-primary hover:bg-slate-400">
-            {avatar ? "Huỷ" : "Thoát"}
-          </div> */}
           <div
             className="p-3 font-semibold rounded-xl text-xl text-primary hover:bg-slate-400"
-            onClick={handleUpdateAvatar}
+            onClick={() => handleCancelModal(avatar ? "cancel" : "exit")}
           >
-            Cập nhât
+            {avatar ? "Huỷ" : "Thoát"}
           </div>
+          {avatar ? (
+            <BtnCommon
+              title={isLoading ? "Đang xử lý" : "Cập nhật"}
+              commonStyles=""
+              handleClick={handleUpdateAvatar}
+              disabled={isLoading}
+            />
+          ) : null}
         </div>
       </div>
     </Modal>

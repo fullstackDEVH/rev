@@ -2,6 +2,10 @@ import { axiosAuthCookie, axiosAuthCookieMultiData, axiosNonAuth } from "./api";
 import { getCookie } from "./common";
 import { ICreateComment } from "./interface";
 
+export const getUserById = async (userId: string) => {
+  return await axiosAuthCookie.get(`/users/${userId}`);
+};
+
 export const getCurrentUser = async () => {
   const token = getCookie("access_token");
   return await axiosAuthCookie.get("/users/me", {
@@ -71,4 +75,20 @@ export const getReviewById = async (reviewId: string) => {
 
 export const createComment = async (reviewId: string, body: ICreateComment) => {
   return await axiosNonAuth.post(`/comments/${reviewId}`, body);
+};
+
+export const getUserReviews = async (userId: string) => {
+  return await axiosAuthCookie.get(`/reviews/${userId}/me`);
+};
+
+export const getUserStores = async (userId: string) => {
+  return await axiosAuthCookie.get(`/stores/${userId}/me`);
+};
+
+export const getTopStores = async () => {
+  return await axiosAuthCookie.get(`/stores/top`);
+};
+
+export const getTopUsersReviews = async () => {
+  return await axiosAuthCookie.get(`/reviews/top/users`);
 };

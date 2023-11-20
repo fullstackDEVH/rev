@@ -87,17 +87,22 @@ export default function WriteReview() {
       alert("Hãy điền đầy đủ thông tin");
       return;
     }
+    const { images, ...newReviewData } = reviewData;
+    const arrImgs = Array.from(images);
+
+    if (arrImgs.length < 1) {
+      alert("Hãy chọn ít nhất 1 tấm ảnh");
+      return;
+    }
 
     setIsLoading(true);
     try {
-      const { images, ...newReviewData } = reviewData;
       const { data } = await axiosNonAuth.post("/reviews", {
         ...newReviewData,
         store: storeId,
         author: currentUser._id,
       });
 
-      const arrImgs = Array.from(images);
       const formData = new FormData();
 
       arrImgs.forEach((file: any) => {

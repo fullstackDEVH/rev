@@ -12,18 +12,6 @@ const authSlice = createSlice({
     currentUser: null as IUser | null,
   },
   reducers: {
-    userLoginPending: (state, action) => {
-      state.isLoading = true;
-      state.error = null;
-    },
-    userLoginFulfill: (state, action) => {
-      state.isLoading = false;
-      state.access_token = action.payload;
-    },
-    userLoginReject: (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
     userLogout: (state) => {
       removeCookie("access_token");
       removeCookie("refresh_token");
@@ -42,8 +30,8 @@ const authSlice = createSlice({
       state.access_token = action.payload.access_token;
       state.currentUser = action.payload.user;
     },
-    setUserMe : (state, action) => {
-      state.currentUser = action.payload
+    setUserMe: (state, action) => {
+      state.currentUser = action.payload;
     },
     setToken: (state, action) => {
       state.access_token = action.payload;
@@ -60,14 +48,11 @@ const authSlice = createSlice({
 });
 
 export const {
-  userLoginPending,
-  userLoginFulfill,
-  userLoginReject,
   userLogout,
   removeError,
   setToken,
   currentUserLogOut,
   setCurrentUserLogin,
-  setUserMe
+  setUserMe,
 } = authSlice.actions;
 export default authSlice.reducer;

@@ -33,7 +33,7 @@ export default function CardComment({ comment }: IProps) {
         <div className="flex justify-between">
           <div className="flex gap-2 items-center">
             <Link
-              href={`/user/profile?userId={userId}`}
+              href={`/user/profile?userId=${comment?.author?._id}`}
               className="text-xl font-semibold transition-colors hover:text-primary"
             >
               {comment?.author?.name}

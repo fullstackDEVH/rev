@@ -1,28 +1,23 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { BtnCommon } from "@/components";
 import CardComment from "@/components/commons/cardComment";
 import LoadingScreen from "@/components/commons/loading";
+import { ReviewLeft, ReviewRight } from "@/components/pages/reviewDetail";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setModalType } from "@/redux/slices/modalSlice";
 import { baseURL } from "@/utils/api";
 import { formatDateTime } from "@/utils/common";
 import { IComment, IReview } from "@/utils/interface";
 import { createComment, getReviewById } from "@/utils/proxy";
-import Image from "next/image";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 
 export default function ReviewDetail() {
   const [reviewDetail, setReviewDetail] = useState<IReview>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [contentCommen, setContentCommen] = useState<string>("");
-  const [indexImgsReview, setIndexImgsReview] = useState(0);
-
-  const { currentUser } = useAppSelector((state) => state.auth);
-
-  const dispatch = useAppDispatch();
 
   const params = useParams();
   const reviewId = params.reviewId as string;
@@ -42,65 +37,11 @@ export default function ReviewDetail() {
     getReviewDetail();
   }, []);
 
-  const totalRating = reviewDetail?.rating
-    ? (reviewDetail?.rating.food_safety +
-        reviewDetail?.rating.price +
-        reviewDetail?.rating.serve +
-        reviewDetail?.rating.smell +
-        reviewDetail?.rating.space) /
-      5
-    : 0;
-
-  const handleNextImg = () => {
-    if (!reviewDetail?.images) return;
-    setIndexImgsReview((pre) =>
-      pre + 1 >= reviewDetail?.images.length ? 0 : pre + 1
-    );
-  };
-
-  const handlePreImg = () => {
-    if (!reviewDetail?.images) return;
-    setIndexImgsReview((pre) =>
-      pre - 1 < 0 ? reviewDetail?.images.length - 1 : pre - 1
-    );
-  };
-
-  const handleCreateComment = async () => {
-    if (!currentUser) {
-      alert("Hãy đăng nhập trước");
-      dispatch(setModalType("LOGIN"));
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const { data } = await createComment(reviewId, {
-        author: currentUser?._id,
-        content: contentCommen,
-      });
-
-      const comment = data.data as IComment;
-
-      const newComments = reviewDetail?.comments
-        ? [comment, ...reviewDetail?.comments]
-        : [];
-
-      setReviewDetail((pre: any) => ({ ...pre, comments: newComments }));
-      setContentCommen("");
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDeleteComment = () => {
-    setContentCommen("");
-  };
-
-  const handleOnChangeInput = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setContentCommen(e.target.value);
+  const updateComments = (comment: IComment) => {
+    setReviewDetail((prev: any) => {
+      const newComments = prev?.comments ? [comment, ...prev.comments] : [];
+      return { ...prev, comments: newComments };
+    });
   };
 
   return (
@@ -108,272 +49,13 @@ export default function ReviewDetail() {
       {isLoading ? <LoadingScreen /> : null}
 
       <div className="px-px-body flex py-8 gap-6">
-        <div className="w-[67%] bg-white drop-shadow-lg p-10 rounded-xl">
-          {/* review detail */}
-          <h2 className="text-xl font-semibold">{reviewDetail?.author.name}</h2>
-          <p className="text-txt-second">
-            {reviewDetail?.created_at &&
-              formatDateTime(reviewDetail?.created_at)}
-            <span className="text-primary"> {reviewDetail?.store.name}</span>
-          </p>
-
-          <div className="flex items-center justify-center w-full relative py-6">
-            {/* arrow left */}
-            <div
-              className="absolute bg-slate-400 top-1/2 left-[5%] flex items-center justify-center"
-              onClick={handlePreImg}
-            >
-              <Image
-                src="/arrow_bottom.svg"
-                alt="arrow_left"
-                width={30}
-                height={30}
-              />
-            </div>
-            <div className="w-[60%] aspect-[1/1.3] relative">
-              <Image
-                src={`${baseURL}/reviews/image/${reviewId}/${reviewDetail?.images[indexImgsReview]}`}
-                alt="banner "
-                fill
-                className="object-contain"
-              />
-            </div>
-            {/* arrow right */}
-            <div
-              className="absolute bg-slate-400 top-1/2 right-[5%] flex items-center justify-center"
-              onClick={handleNextImg}
-            >
-              <Image
-                src="/arrow_bottom.svg"
-                alt="arrow_left"
-                width={30}
-                height={30}
-              />
-            </div>
-
-            {/* total viewer */}
-            <div className="flex gap-2 absolute left-[5%] bottom-0 py-2 px-4 bg-[#4c4c4c] rounded-xl">
-              <Image src="/eye.svg" alt="eye" width={24} height={24} />
-              <span className="text-white font-medium">3k</span>
-            </div>
-            {/* total image */}
-            <div className="absolute right-[5%] bottom-0 py-2 px-4 bg-[#4c4c4c] rounded-xl">
-              <span className="text-white font-medium">
-                {indexImgsReview + 1}/{reviewDetail?.images.length}
-              </span>
-            </div>
-          </div>
-          {/* review content */}
-          <div className="py-4 mt-6 border-t">
-            <div className="flex items-center gap-2">
-              {/* rating */}
-              <Image
-                src="/star_icon.svg"
-                alt="arrow_left"
-                width={30}
-                height={30}
-              />
-              <p className="text-xl font-medium">{totalRating}</p>/
-              <span>5.0 điểm</span>
-            </div>
-
-            {/* title */}
-            <h4 className="text-3xl font-bold my-3">{reviewDetail?.title}</h4>
-            <p className="text-lg">{reviewDetail?.content}</p>
-          </div>
-
-          {/* link to store */}
-          <Link href={`/store/${reviewDetail?.store._id}`} className="py-6">
-            <div className="flex gap-4 border rounded-xl p-6 hover:shadow-xl transition-shadow relative">
-              {/* banner store */}
-              <div className="w-[10%] aspect-[1/1] relative">
-                <Image
-                  src={`${baseURL}/stores/image/${reviewDetail?.store._id}/${reviewDetail?.store.images[0]}`}
-                  alt="banner"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              {/* store detail */}
-              <div>
-                <h4 className="text-2xl font-semibold hover:text-primary transition-colors line-clamp-1">
-                  {reviewDetail?.store.name}
-                </h4>
-                <p className="text-lg text-txt-second line-clamp-1">
-                  {reviewDetail?.store.address}
-                </p>
-                <div className="flex items-center gap-2">
-                  {/* rating */}
-                  <Image
-                    src="/star_icon.svg"
-                    alt="arrow_left"
-                    width={30}
-                    height={30}
-                  />
-                  <p className="text-xl font-medium">4.5</p>
-                  <span className="text-lg font-medium text-txt-second">
-                    ( {reviewDetail?.comments.length} riviu )
-                  </span>
-                </div>
-              </div>
-
-              {/* icon edit store */}
-              <div className="absolute top-[7%] right-[2%] grid place-items-center p-2 bg-[#f0f2f4] rounded-full shadow-md">
-                <Image
-                  src="/edit_comment.svg"
-                  alt="arrow_left"
-                  width={30}
-                  height={30}
-                  className="rounded-full"
-                />
-              </div>
-            </div>
-          </Link>
-
-          {/* comments */}
-          {/* heading */}
-          <div className="flex justify-between items-center py-6">
-            {/* left */}
-            <div className="flex gap-2">
-              <Image
-                src="/HEART.svg"
-                alt="HEART"
-                width={30}
-                height={30}
-                className="rounded-full"
-              />
-              <span className="text-lg">2 người yêu thích</span>
-            </div>
-            {/* right */}
-            <p className="text-lg font-semibold">
-              {reviewDetail?.comments.length} Bình luận
-            </p>
-          </div>
-
-          {/* input comment */}
-          <div className="flex gap-6">
-            <div className="w-12 h-12 relative">
-              <Image
-                src="/banner-main.png"
-                alt="banner"
-                fill
-                className="object-cover rounded-full"
-              />
-            </div>
-            <textarea
-              cols={12}
-              placeholder="Nhập bình luận"
-              value={contentCommen}
-              onChange={handleOnChangeInput}
-              className="outline-none resize-none overflow-hidden flex-1 p-3 text-xl bg-[#f4f5f8] rounded-xl"
-            ></textarea>
-          </div>
-
-          {/* btn comment */}
-          {contentCommen ? (
-            <div className="flex justify-end mt-4">
-              <BtnCommon
-                title={isLoading ? "Đang xử lý" : "Bình luận"}
-                commonStyles=""
-                handleClick={handleCreateComment}
-                disabled={isLoading}
-              />
-              <div className={`h-[60px] p-1 rounded-xl`}>
-                <div
-                  className={`rounded-xl shadow-lg flex item-center justify-center px-4 py-3 bg-[#f7f7f7] text-black font-semibold text-lg min-w-[120px] cursor-pointer`}
-                  onClick={handleDeleteComment}
-                >
-                  Huỷ
-                </div>
-              </div>
-            </div>
-          ) : null}
-
-          {/* list comments */}
-          <div className="py-6">
-            <div className="grid grid-cols-1 gap-10">
-              {reviewDetail?.comments.length ? (
-                reviewDetail?.comments.map((comment, ind) => (
-                  <CardComment comment={comment} key={ind} />
-                ))
-              ) : (
-                <div className="text-center w-full mt-8 text-xl font-medium">
-                  Hãy là người bình luận đầu tiên.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        <ReviewLeft
+          reviewDetail={reviewDetail}
+          updateComments={updateComments}
+        />
 
         {/* advertise right */}
-        <div className="w-[33%]">
-          <div className="sticky top-[8%]">
-            {/* information owner review */}
-            <div className="bg-white rounded-xl p-4 shadow-lg ">
-              <Link href={`/user/profile?userId=${reviewDetail?.author._id}`}>
-                <div className="flex items-center gap-4 pb-4">
-                  <div className="relative h-full w-[20%] aspect-[1/1]">
-                    <Image
-                      src={
-                        reviewDetail?.author?.avatar
-                          ? `${baseURL}/users/avatar/${reviewDetail?.author?.avatar}`
-                          : "/avatar.png"
-                      }
-                      alt="banner"
-                      fill
-                      className="object-cover rounded-full"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="text-txt-primary text-2xl font-semibold flex justify-center gap-3 flex-col">
-                      {reviewDetail?.author?.name}
-                    </h4>
-                    <p>{reviewDetail?.author.email}</p>
-                  </div>
-                </div>
-
-                <div className="border-t pt-4">
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="text-center text-xl ">
-                      <div className="text-txt-primary font-semibold">7</div>
-                      <p className="text-txt-second font-medium">Bài viết</p>
-                    </div>
-                    <div className="text-center text-xl ">
-                      <div className="text-txt-primary font-semibold">1</div>
-                      <p className="text-txt-second font-medium">
-                        Người theo dõi
-                      </p>
-                    </div>
-                    <div className="text-center text-xl ">
-                      <div className="text-txt-primary font-semibold">1</div>
-                      <p className="text-txt-second font-medium">
-                        Đang theo dõi
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
-
-            {/* quảng cáo */}
-            <div className="relative aspect-[1/1] mt-6">
-              <Image
-                src="/banner-detail-star.png"
-                alt="banner-detail-star"
-                fill
-                className="object-cover rounded-xl"
-              />
-            </div>
-            {/* <div className="relative aspect-[1/1] mt-6">
-          <Image
-            src="/banner-main.png"
-            alt="banner-detail-star"
-            fill
-            className="object-cover rounded-xl"
-          />
-        </div> */}
-          </div>
-        </div>
+        <ReviewRight reviewDetail={reviewDetail} />
       </div>
     </>
   );

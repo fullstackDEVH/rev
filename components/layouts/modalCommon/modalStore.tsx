@@ -140,6 +140,12 @@ export default function ModalStore() {
       alert("Hãy điền đầy đủ thông tin");
       return;
     }
+    const arrImgs = Array.from(storeData.images);
+
+    if (arrImgs.length < 5) {
+      alert("Hãy chọn ít nhất 5 tấm ảnh");
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -151,8 +157,6 @@ export default function ModalStore() {
       });
 
       const formData = new FormData();
-
-      const arrImgs = Array.from(storeData.images);
 
       arrImgs.forEach((file: any) => {
         formData.append(`images`, file);
@@ -323,7 +327,11 @@ export default function ModalStore() {
             {storeData.images ? (
               <>
                 <Image
-                  src={URL.createObjectURL(Array.from(storeData.images)[0])}
+                  src={
+                    Array.from(storeData.images)[0]
+                      ? URL.createObjectURL(Array.from(storeData.images)[0])
+                      : ""
+                  }
                   alt="avatar"
                   fill
                   className="rounded-xl object-cover"

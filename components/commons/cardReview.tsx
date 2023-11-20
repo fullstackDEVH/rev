@@ -1,4 +1,6 @@
+import { useAppSelector } from "@/redux/hooks";
 import { baseURL } from "@/utils/api";
+import { formatDateTime } from "@/utils/common";
 import { IReview } from "@/utils/interface";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,23 +9,31 @@ interface IProps {
   review: IReview;
 }
 
-export default function CardRivew({ review }: IProps) {
+export default function CardReview({ review }: IProps) {
+  const { currentUser } = useAppSelector((state) => state.auth);
+
   return (
     <div className="shadow-lg bg-white rounded-2xl p-6 hover:shadow-2xl transition-shadow cursor-pointer">
       {/* title */}
       <div className="flex gap-3">
         <Image
-          src="/avatar.png"
+          src={
+            review?.author?.avatar
+              ? `${baseURL}/users/avatar/${review?.author?.avatar}`
+              : "/avatar_1.png"
+          }
           alt="avatar"
           width={60}
           height={60}
           className="rounded-full object-cover"
         />
         <div className="grid grid-cols-1 gap-1">
-          <h2 className="text-xl font-semibold">username</h2>
+          <h2 className="text-xl font-semibold">{review.author.name}</h2>
           <p className="text-[19px] font-medium">
-            <span className="text-txt-second">{review.created_at}</span> -{" "}
-            <span className="text-primary">Gangnam Topokki Buffet</span>
+            <span className="text-txt-second">
+              {formatDateTime(review.created_at)}
+            </span>{" "}
+            - <span className="text-primary">{review.store.name}</span>
           </p>
         </div>
       </div>

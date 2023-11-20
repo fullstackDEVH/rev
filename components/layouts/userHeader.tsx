@@ -1,5 +1,6 @@
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { currentUserLogOut } from "@/redux/slices/authSlice";
+import { baseURL } from "@/utils/api";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -13,6 +14,7 @@ const dropDownUser = [
 export default function UserHeader() {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { currentUser } = useAppSelector((state) => state.auth);
 
   const handleItemClick = (key: string) => {
     if (key === "Đăng xuất") {
@@ -25,7 +27,16 @@ export default function UserHeader() {
   return (
     <div className="relative group">
       <div className="h-[50px] relative w-[50px] overflow-hidden rounded-full shadow-lg cursor-pointer">
-        <Image src="/avatar.png" alt="avatar" fill className="object-contain" />
+        <Image
+          src={
+            currentUser?.avatar
+              ? `${baseURL}/users/avatar/${currentUser?.avatar}`
+              : "/avatar_1.png"
+          }
+          alt="avatar"
+          fill
+          className="object-contain"
+        />
       </div>
       <div className="absolute shadow-md z-10 w-[250px] rounded-lg top-full left-0 bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all ">
         {dropDownUser.map((item) => (
