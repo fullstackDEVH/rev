@@ -1,65 +1,58 @@
 import { baseURL } from "@/utils/api";
-import { IReview } from "@/utils/interface";
+import { formatDateTime } from "@/utils/common";
+import { IComment } from "@/utils/interface";
 import Image from "next/image";
+import Link from "next/link";
 
 interface IProps {
-  review: IReview;
+  comment: IComment;
 }
 
-export default function CardComment({ review }: IProps) {
+export default function CardComment({ comment }: IProps) {
   return (
-    <div className="shadow-lg bg-white rounded-2xl p-6">
-      {/* title */}
-      <div className="flex gap-3">
+    <div className="flex gap-5">
+      <Link
+        href={`/user/profile?userId={userId}`}
+        className="relative h-14 w-14 hover:shadow-xl transition-shadow"
+      >
         <Image
-          src="/avatar.png"
+          src={
+            comment?.author?.avatar
+              ? `${baseURL}/users/avatar/${comment?.author?.avatar}`
+              : "/avatar_1.png"
+          }
           alt="avatar"
-          width={60}
-          height={60}
-          className="rounded-full object-cover"
+          fill
+          className="object-cover rounded-full"
         />
-        <div className="grid grid-cols-1 gap-1">
-          <h2 className="text-xl font-semibold">username</h2>
-          <p className="text-[19px] font-medium">
-            <span className="text-txt-second">{review.created_at}</span> -{" "}
-            <span className="text-primary">Gangnam Topokki Buffet</span>
-          </p>
-        </div>
-      </div>
-      <h2 className="text-xl font-semibold mt-2">{review.title}</h2>
+      </Link>
 
-      {/* rating comment */}
-      <div className="flex gap-1 items-center mt-2">
-        <div className="text-lg font-semibold">Đánh giá chung :</div>
-        <Image src="/star_icon.svg" alt="star_icon" width={20} height={20} />
-        <h5 className="font-semibold text-lg text-txt-primary">
-          {review.rating.price}
-        </h5>
-        <span>/ 5 điểm</span>
-      </div>
-      {/* desc */}
-      <p className="text-lg">{review.content}</p>
-
-      <div className="relative grid grid-cols-5 gap-2 mt-4">
-        {review.images.slice(0, 6).map((image, index) => (
-          <div key={index} className="aspect-[1/1] relative">
-            <Image
-              src={`${baseURL}/reviews/image/${review._id}/${image}`}
-              alt="img"
-              fill
-              className="object-cover rounded-lg"
-            />
+      {/* content comment */}
+      <div className="flex flex-1 flex-col gap-2">
+        {/* heading */}
+        <div className="flex justify-between">
+          <div className="flex gap-2 items-center">
+            <Link
+              href={`/user/profile?userId={userId}`}
+              className="text-xl font-semibold transition-colors hover:text-primary"
+            >
+              {comment?.author?.name}
+            </Link>
+            <p className="text-txt-second">
+              {formatDateTime(comment.created_at)}
+            </p>
           </div>
-        ))}
-        {
-          <>
-            {review.images.length > 5 ? (
-              <p className="absolute bg-[#00000070] p-2 text-lg font-medium rounded-full bottom-4 right-4 text-white">
-                {review.images.length - 5}
-              </p>
-            ) : null}
-          </>
-        }
+          <Image
+            src="/heart_black.svg"
+            alt="HEART"
+            width={24}
+            height={24}
+            className="object-cover rounded-full"
+          />
+        </div>
+
+        {/* content */}
+        <p className="text-lg">{comment.content}</p>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { format, parseISO } from "date-fns";
 
 export function setCookie(key: string, value: string, options?: object) {
   Cookies.set(key, value, options);
@@ -23,4 +24,10 @@ export const generateTimeOptions = () => {
     }
   }
   return timeOptions;
+};
+
+export const formatDateTime = (isoDateString: string) => {
+  const parsedDate = parseISO(isoDateString);
+  const formattedDate = format(parsedDate, "dd/MM/yyyy 'lúc' HH:mm");
+  return formattedDate;
 };

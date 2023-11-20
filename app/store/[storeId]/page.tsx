@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import CardComment from "@/components/commons/cardComment";
+import CardComment from "@/components/commons/cardReview";
 import CardOutstanding from "@/components/commons/cardOutstanding";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { getStoreById } from "@/utils/proxy";
 import { IStoreDetail } from "@/utils/interface";
 import { baseURL } from "@/utils/api";
-import Loading from "@/components/commons/loading";
+import LoadingScreen from "@/components/commons/loading";
 
 export default function StoreDetail() {
   const router = useRouter();
@@ -20,11 +20,14 @@ export default function StoreDetail() {
 
   useEffect(() => {
     const getStoreDetail = async () => {
+      setIsLoading(true);
       try {
         const { data } = await getStoreById(storeId);
         setStoreDetail(data.data);
       } catch (error: any) {
         alert(`${error?.response?.data?.error ?? "Lỗi rồi"}`);
+      } finally {
+        setIsLoading(false);
       }
     };
     getStoreDetail();
@@ -32,7 +35,7 @@ export default function StoreDetail() {
 
   return (
     <>
-      {isLoading ? <Loading /> : null}
+      {isLoading ? <LoadingScreen /> : null}
       <div className="px-px-body py-8">
         {/* common detail */}
         <div className="bg-white rounded-xl shadow-lg">
@@ -249,6 +252,8 @@ export default function StoreDetail() {
               )}
             </div>
           </div>
+
+          {/* left 30% */}
           <div className="w-[30%]">
             <div className="relative aspect-[1/1]">
               <Image

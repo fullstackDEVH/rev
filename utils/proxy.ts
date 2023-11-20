@@ -1,5 +1,6 @@
 import { axiosAuthCookie, axiosAuthCookieMultiData, axiosNonAuth } from "./api";
 import { getCookie } from "./common";
+import { ICreateComment } from "./interface";
 
 export const getCurrentUser = async () => {
   const token = getCookie("access_token");
@@ -64,3 +65,10 @@ export const uploadAvatar = async (userId: string, formData: FormData) => {
   );
 };
 
+export const getReviewById = async (reviewId: string) => {
+  return await axiosNonAuth.get(`/reviews/${reviewId}/detail`);
+};
+
+export const createComment = async (reviewId: string, body: ICreateComment) => {
+  return await axiosNonAuth.post(`/comments/${reviewId}`, body);
+};

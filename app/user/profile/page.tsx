@@ -20,7 +20,7 @@ export default function Profile() {
               src={
                 currentUser?.avatar
                   ? `${baseURL}/users/avatar/${currentUser?.avatar}`
-                  : "/avatar.png"
+                  : "/avatar_1.png"
               }
               alt="avatar"
               fill
@@ -46,21 +46,35 @@ export default function Profile() {
         </div>
 
         {/* kiệt kê */}
-        <div className="flex gap-4 my-6">
-          <div className="text-lg">
-            <span className="font-medium text-xl">1</span> bài viết
+        <div className="flex justify-between items-center">
+          <div className="flex gap-4 mt-6 mb-3 items-center">
+            <div className="text-lg">
+              <span className="font-medium text-xl">1</span> bài viết
+            </div>
+            <div className="text-lg">
+              <span className="font-medium text-xl">0</span> người theo dõi
+            </div>
+            <div className="text-lg">
+              <span className="font-medium text-xl">0</span> đang theo dõi
+            </div>
           </div>
-          <div className="text-lg">
-            <span className="font-medium text-xl">0</span> người theo dõi
-          </div>
-          <div className="text-lg">
-            <span className="font-medium text-xl">0</span> đang theo dõi
+
+          <div className="text-lg font-medium flex gap-2 items-center">
+            Xem nhiều bài du lịch, ăn uống tại Riviu.vn của{" "}
+            <span className="text-xl font-semibold text-primary">
+              {currentUser?.name}
+            </span>{" "}
+            nhé...
+            <Image src="/heart_red.svg" alt="heart" width={24} height={24} />
           </div>
         </div>
 
         {/* tags */}
         <div className="py-4 flex justify-center items-center">
-              
+          <div className="text-xl">Bài viết</div>
+          <div className="text-xl">Bộ sưu tập</div>
+          <div className="text-xl">Ảnh/video</div>
+          <div className="text-xl">Địa điểm</div>
         </div>
       </div>
     </div>

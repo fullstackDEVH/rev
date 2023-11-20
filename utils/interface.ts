@@ -49,13 +49,15 @@ export interface IReview {
     food_safety: number;
   };
   _id: string;
-  author: string;
-  store: string;
+  author: IUser;
+  store: IStore;
   title: string;
   content: string;
   images: string[];
   created_at: string;
+  comments: IComment[];
 }
+
 export interface IStore {
   _id: string;
   name: string;
@@ -69,6 +71,12 @@ export interface IStore {
   address: string;
   owner: string;
 }
+
+export interface IComment {
+  author: IUser;
+  content: string;
+  created_at: string;
+}
 export interface IStoreDetail {
   serve: number;
   price: number;
@@ -78,4 +86,9 @@ export interface IStoreDetail {
   total_rating: number;
   foundReviews: IReview[];
   foundStore: IStore;
+}
+
+export interface ICreateComment {
+  author: string;
+  content: string;
 }

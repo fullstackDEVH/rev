@@ -1,6 +1,7 @@
 "use client";
 
 import { BtnCommon } from "@/components";
+import LoadingScreen from "@/components/commons/loading";
 import StarRatings from "@/components/commons/starRating";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setModalType } from "@/redux/slices/modalSlice";
@@ -116,180 +117,183 @@ export default function WriteReview() {
   };
 
   return (
-    <div className="px-px-body py-6">
-      <h2 className="text-5xl font-bold text-center ">Viết Riviu</h2>
+    <>
+      {isLoading ? <LoadingScreen /> : null}
+      <div className="px-px-body py-6">
+        <h2 className="text-5xl font-bold text-center ">Viết Riviu</h2>
 
-      <div className="p-6 mt-6 rounded-xl bg-white">
-        <div className="flex gap-8">
-          {/* left */}
-          <div className="w-[65%]">
-            <input
-              type="text"
-              name="title"
-              onChange={handleInputChange}
-              className="h-12 w-full outline-none bg-transparent p-4 text-4xl font-semibold mb-4"
-              placeholder="Viết tiêu đề ..."
-            />
-
-            <div className="rounded-xl border p-4">
-              <textarea
-                name="content"
-                id=""
-                cols={30}
-                rows={10}
-                value={reviewData.content}
+        <div className="p-6 mt-6 rounded-xl bg-white">
+          <div className="flex gap-8">
+            {/* left */}
+            <div className="w-[65%]">
+              <input
+                type="text"
+                name="title"
                 onChange={handleInputChange}
-                className="text-txt-primary outline-none w-full h-full font-semibold text-2xl resize-none overflow-hidden"
-                placeholder="Bạn có gì muốn Riviu ..."
-              ></textarea>
+                className="h-12 w-full outline-none bg-transparent p-4 text-4xl font-semibold mb-4"
+                placeholder="Viết tiêu đề ..."
+              />
+
+              <div className="rounded-xl border p-4">
+                <textarea
+                  name="content"
+                  id=""
+                  cols={30}
+                  rows={10}
+                  value={reviewData.content}
+                  onChange={handleInputChange}
+                  className="text-txt-primary outline-none w-full h-full font-semibold text-2xl resize-none overflow-hidden"
+                  placeholder="Bạn có gì muốn Riviu ..."
+                ></textarea>
+              </div>
+
+              {/* images */}
+              <div className="mt-6">
+                <div className="grid grid-cols-5 gap-3 relative">
+                  <>
+                    {imgsBlob.length > 4 ? (
+                      <p className="absolute z-10 bg-[#00000070] p-2 text-lg font-medium rounded-full bottom-4 right-4 text-white">
+                        {imgsBlob.length - 4}
+                      </p>
+                    ) : null}
+                  </>
+                  <label className="aspect-[1/1] rounded-xl border border-dotted flex items-center flex-col justify-center gap-2">
+                    <Image src="/lanscape.svg" alt="" width={34} height={34} />
+                    <span className="text-lg">Tải ảnh lên</span>
+                    <input
+                      type="file"
+                      name="images"
+                      onChange={handleImageChange}
+                      accept="image/*"
+                      id="images"
+                      multiple
+                      className="hidden"
+                    />
+                  </label>
+                  {imgsBlob.slice(0, 4).map((blob, index) => (
+                    <div
+                      key={index}
+                      className="aspect-[1/1] relative rounded-xl overflow-hidden shadow"
+                    >
+                      <Image src={blob} alt="" fill className="object-cover" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            {/* images */}
-            <div className="mt-6">
-              <div className="grid grid-cols-5 gap-3 relative">
-                <>
-                  {imgsBlob.length > 4 ? (
-                    <p className="absolute z-10 bg-[#00000070] p-2 text-lg font-medium rounded-full bottom-4 right-4 text-white">
-                      {imgsBlob.length - 4}
-                    </p>
-                  ) : null}
-                </>
-                <label className="aspect-[1/1] rounded-xl border border-dotted flex items-center flex-col justify-center gap-2">
-                  <Image src="/lanscape.svg" alt="" width={34} height={34} />
-                  <span className="text-lg">Tải ảnh lên</span>
-                  <input
-                    type="file"
-                    name="images"
-                    onChange={handleImageChange}
-                    accept="image/*"
-                    id="images"
-                    multiple
-                    className="hidden"
+            {/* right */}
+            <div className="w-[35%]">
+              <h2 className="text-3xl text-txt-second font-semibold mb-4 mt-3">
+                Địa điểm
+              </h2>
+              {/* choose store */}
+              <div className="rounded-xl border border-dotted flex items-center justify-center gap-3 h-[150px] cursor-pointer">
+                <Image src="/address.svg" alt="" width={34} height={34} />
+                <span className="text-xl text-txt-second">
+                  Nhấn vào để chọn địa điểm
+                </span>
+              </div>
+
+              {/* rating */}
+              <h2 className="text-3xl text-txt-second font-semibold mb-4 mt-3">
+                Địa điểm
+              </h2>
+
+              <div className="border-t grid grid-cols-1 gap-4 py-5">
+                <div className="flex justify-between items-center">
+                  <h5 className="text-xl font-medium">Vệ sinh</h5>
+                  <StarRatings
+                    rating={reviewData.rating.food_safety}
+                    handleOnChangeRating={(point) => {
+                      setReviewData((prev) => ({
+                        ...prev,
+                        rating: {
+                          ...prev.rating,
+                          food_safety: point,
+                        },
+                      }));
+                    }}
+                    isEdit={true}
                   />
-                </label>
-                {imgsBlob.slice(0, 4).map((blob, index) => (
-                  <div
-                    key={index}
-                    className="aspect-[1/1] relative rounded-xl overflow-hidden shadow"
-                  >
-                    <Image src={blob} alt="" fill className="object-cover" />
-                  </div>
-                ))}
+                </div>
+                <div className="flex justify-between items-center">
+                  <h5 className="text-xl font-medium">Hương vị</h5>
+                  <StarRatings
+                    rating={reviewData.rating.smell}
+                    handleOnChangeRating={(point) => {
+                      setReviewData((prev) => ({
+                        ...prev,
+                        rating: {
+                          ...prev.rating,
+                          smell: point,
+                        },
+                      }));
+                    }}
+                    isEdit={true}
+                  />
+                </div>
+                <div className="flex justify-between items-center">
+                  <h5 className="text-xl font-medium">Không gian</h5>
+                  <StarRatings
+                    rating={reviewData.rating.space}
+                    handleOnChangeRating={(point) => {
+                      setReviewData((prev) => ({
+                        ...prev,
+                        rating: {
+                          ...prev.rating,
+                          space: point,
+                        },
+                      }));
+                    }}
+                    isEdit={true}
+                  />
+                </div>
+                <div className="flex justify-between items-center">
+                  <h5 className="text-xl font-medium">Giá cả</h5>
+                  <StarRatings
+                    rating={reviewData.rating.price}
+                    handleOnChangeRating={(point) => {
+                      setReviewData((prev) => ({
+                        ...prev,
+                        rating: {
+                          ...prev.rating,
+                          price: point,
+                        },
+                      }));
+                    }}
+                    isEdit={true}
+                  />
+                </div>
+                <div className="flex justify-between items-center">
+                  <h5 className="text-xl font-medium">Phục vụ</h5>
+                  <StarRatings
+                    rating={reviewData.rating.serve}
+                    handleOnChangeRating={(point) => {
+                      setReviewData((prev) => ({
+                        ...prev,
+                        rating: {
+                          ...prev.rating,
+                          serve: point,
+                        },
+                      }));
+                    }}
+                    isEdit={true}
+                  />
+                </div>
               </div>
+
+              {/* btn submit */}
+              <BtnCommon
+                title={isLoading ? "Đang xử lý..." : "Đăng bài"}
+                commonStyles=""
+                handleClick={handleSubmit}
+                disabled={isLoading}
+              />
             </div>
-          </div>
-
-          {/* right */}
-          <div className="w-[35%]">
-            <h2 className="text-3xl text-txt-second font-semibold mb-4 mt-3">
-              Địa điểm
-            </h2>
-            {/* choose store */}
-            <div className="rounded-xl border border-dotted flex items-center justify-center gap-3 h-[150px] cursor-pointer">
-              <Image src="/address.svg" alt="" width={34} height={34} />
-              <span className="text-xl text-txt-second">
-                Nhấn vào để chọn địa điểm
-              </span>
-            </div>
-
-            {/* rating */}
-            <h2 className="text-3xl text-txt-second font-semibold mb-4 mt-3">
-              Địa điểm
-            </h2>
-
-            <div className="border-t grid grid-cols-1 gap-4 py-5">
-              <div className="flex justify-between items-center">
-                <h5 className="text-xl font-medium">Vệ sinh</h5>
-                <StarRatings
-                  rating={reviewData.rating.food_safety}
-                  handleOnChangeRating={(point) => {
-                    setReviewData((prev) => ({
-                      ...prev,
-                      rating: {
-                        ...prev.rating,
-                        food_safety: point,
-                      },
-                    }));
-                  }}
-                  isEdit={true}
-                />
-              </div>
-              <div className="flex justify-between items-center">
-                <h5 className="text-xl font-medium">Hương vị</h5>
-                <StarRatings
-                  rating={reviewData.rating.smell}
-                  handleOnChangeRating={(point) => {
-                    setReviewData((prev) => ({
-                      ...prev,
-                      rating: {
-                        ...prev.rating,
-                        smell: point,
-                      },
-                    }));
-                  }}
-                  isEdit={true}
-                />
-              </div>
-              <div className="flex justify-between items-center">
-                <h5 className="text-xl font-medium">Không gian</h5>
-                <StarRatings
-                  rating={reviewData.rating.space}
-                  handleOnChangeRating={(point) => {
-                    setReviewData((prev) => ({
-                      ...prev,
-                      rating: {
-                        ...prev.rating,
-                        space: point,
-                      },
-                    }));
-                  }}
-                  isEdit={true}
-                />
-              </div>
-              <div className="flex justify-between items-center">
-                <h5 className="text-xl font-medium">Giá cả</h5>
-                <StarRatings
-                  rating={reviewData.rating.price}
-                  handleOnChangeRating={(point) => {
-                    setReviewData((prev) => ({
-                      ...prev,
-                      rating: {
-                        ...prev.rating,
-                        price: point,
-                      },
-                    }));
-                  }}
-                  isEdit={true}
-                />
-              </div>
-              <div className="flex justify-between items-center">
-                <h5 className="text-xl font-medium">Phục vụ</h5>
-                <StarRatings
-                  rating={reviewData.rating.serve}
-                  handleOnChangeRating={(point) => {
-                    setReviewData((prev) => ({
-                      ...prev,
-                      rating: {
-                        ...prev.rating,
-                        serve: point,
-                      },
-                    }));
-                  }}
-                  isEdit={true}
-                />
-              </div>
-            </div>
-
-            {/* btn submit */}
-            <BtnCommon
-              title={isLoading ? "Đang xử lý..." : "Đăng bài"}
-              commonStyles=""
-              handleClick={handleSubmit}
-              disabled={isLoading}
-            />
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -10,6 +10,7 @@ import { ICreateStore } from "@/utils/interface";
 import { generateTimeOptions } from "@/utils/common";
 import { axiosAuthCookieMultiData } from "@/utils/api";
 import { uploadImagesStore } from "@/utils/proxy";
+import { useRouter } from "next/navigation";
 
 interface IProvice {
   code: string;
@@ -50,6 +51,8 @@ export default function ModalStore() {
     price_highest: "",
     province: "",
   });
+
+  const router = useRouter();
 
   const isFormValid = () => {
     // Kiểm tra tất cả các trường dữ liệu có giá trị không rỗng
@@ -159,6 +162,7 @@ export default function ModalStore() {
 
       alert("Tạo thành công");
       dispatch(setModalType(null));
+      router.push(`/store/${data.data._id}`);
     } catch (error) {
       console.error("Error:", error);
     } finally {
