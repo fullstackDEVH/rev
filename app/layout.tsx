@@ -5,6 +5,7 @@ import { Header } from "@/components";
 import Image from "next/image";
 import ReduxProvider from "@/components/layouts/reduxProvider";
 import ModalProvider from "@/components/layouts/modalCommon/modalProvider";
+import ToastifyProvider from "@/components/layouts/toastProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,6 +37,7 @@ export default function RootLayout({
           </div>
           <ModalProvider />
         </ReduxProvider>
+        <ToastifyProvider />
       </body>
     </html>
   );

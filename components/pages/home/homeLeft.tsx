@@ -1,5 +1,6 @@
 import CardFoodStore from "@/components/commons/cardFoodStore";
 import Stores from "@/components/commons/stores";
+import { CUISINE_NATIONAL_FOOD } from "@/utils/data";
 import Image from "next/image";
 
 export default function HomeLeft() {
@@ -29,9 +30,9 @@ export default function HomeLeft() {
 
         {/* lisst store by */}
         <div className="grid grid-cols-3 gap-4">
-          <CardFoodStore />
-          <CardFoodStore />
-          <CardFoodStore />
+          {CUISINE_NATIONAL_FOOD.map((cuisine, index) => (
+            <CardFoodStore key={index} cuisine={cuisine} />
+          ))}
         </div>
       </div>
 

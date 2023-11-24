@@ -56,6 +56,7 @@ export interface IReview {
   images: string[];
   created_at: string;
   comments: IComment[];
+  favourities: string[];
 }
 
 export interface IStore {
@@ -91,4 +92,16 @@ export interface IStoreDetail {
 export interface ICreateComment {
   author: string;
   content: string;
+}
+
+export interface IReviewCuisine {
+  author: IUser;
+  comments: string[];
+  images: string[];
+  favourities: string[];
+  store: string;
+  title: string;
+  content: string;
+  _id: string;
+  created_at: string;
 }

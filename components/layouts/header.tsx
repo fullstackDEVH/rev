@@ -53,9 +53,6 @@ export default function Header() {
                 placeholder="Tìm kiếm địa điểm rì viu."
               />
             </div>
-            <div className="text-txt-second text-lg cursor-pointer font-bold">
-              Hồ Chí Minh
-            </div>
           </div>
 
           {currentUser?._id ? (

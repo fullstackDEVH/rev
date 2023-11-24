@@ -11,6 +11,7 @@ import { generateTimeOptions } from "@/utils/common";
 import { axiosAuthCookieMultiData } from "@/utils/api";
 import { uploadImagesStore } from "@/utils/proxy";
 import { useRouter } from "next/navigation";
+import { DISTRICTS } from "@/utils/data";
 
 interface IProvice {
   code: string;
@@ -19,15 +20,6 @@ interface IProvice {
   slug: string;
   type: string;
 }
-
-const dishes = [
-  { key: "vietnamese", label: "Món Việt" },
-  { key: "korean", label: "Món Hàn" },
-  { key: "japanese", label: "Món Nhật" },
-  { key: "chinese", label: "Món Trung" },
-  { key: "german", label: "Món Đức" },
-  { key: "french", label: "Món Pháp" },
-];
 
 export default function ModalStore() {
   const { typeModal } = useAppSelector((state) => state.modal);
@@ -204,10 +196,10 @@ export default function ModalStore() {
                 onChange={handleInputChange}
                 className="w-full outline-none"
               >
-                <option value="">Chọn tỉnh thành</option>
-                {provinces.map((province) => (
-                  <option key={province.slug} value={province.name}>
-                    {province.slug}
+                <option value="">Chọn quận</option>
+                {DISTRICTS.map((dictrict) => (
+                  <option key={dictrict} value={dictrict}>
+                    {dictrict}
                   </option>
                 ))}
               </select>
@@ -245,7 +237,7 @@ export default function ModalStore() {
                 className="w-full outline-none"
               >
                 <option value="">Chọn món ăn</option>
-                {dishes.map((dish) => (
+                {CUISINE_NATIONAL_FOOD.map((dish) => (
                   <option key={dish.key} value={dish.key}>
                     {dish.label}
                   </option>

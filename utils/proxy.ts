@@ -92,3 +92,16 @@ export const getTopStores = async () => {
 export const getTopUsersReviews = async () => {
   return await axiosAuthCookie.get(`/reviews/top/users`);
 };
+
+export const getReviewsByNational = async (
+  national: string,
+  rating: string
+) => {
+  return await axiosAuthCookie.get(
+    `/reviews/${national}/post?${rating ? `rating=${rating}` : ""}`
+  );
+};
+
+export const likeReview = async (reviewId: string, userId: string) => {
+  return await axiosAuthCookie.patch(`/reviews/like/${reviewId}/${userId}`);
+};

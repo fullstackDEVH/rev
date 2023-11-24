@@ -31,3 +31,48 @@ export const formatDateTime = (isoDateString: string) => {
   const formattedDate = format(parsedDate, "dd/MM/yyyy 'lúc' HH:mm");
   return formattedDate;
 };
+
+export const updateSearchParams = (type: string, value: string) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  searchParams.set(type, value);
+  const newPathname = `${window.location.pathname}?${searchParams.toString()}`;
+
+  return newPathname;
+};
+
+export const updateMutilpleSearchParams = (paramsToUpdate: any) => {
+  const searchParams = new URLSearchParams(window.location.search);
+
+  Object.entries(paramsToUpdate).forEach(([type, value]: any) => {
+    searchParams.set(type, value);
+  });
+
+  const newPathname = `${window.location.pathname}?${searchParams.toString()}`;
+
+  return newPathname;
+};
+
+export const clearAllSearchParams = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+
+  // Xóa tất cả các tham số tìm kiếm
+  searchParams.forEach((value, key) => {
+    searchParams.delete(key);
+  });
+
+  const newPathname = `${window.location.pathname}?${searchParams.toString()}`;
+
+  return newPathname;
+};
+
+export const clearSearchParams = (paramsToDelete: string[]) => {
+  const searchParams = new URLSearchParams(window.location.search);
+
+  paramsToDelete.forEach((param) => {
+    searchParams.delete(param);
+  });
+
+  const newPathname = `${window.location.pathname}?${searchParams.toString()}`;
+
+  return newPathname;
+};
