@@ -9,6 +9,7 @@ import { ChangeEvent, useState } from "react";
 import { uploadAvatar } from "@/utils/proxy";
 import { useRouter } from "next/navigation";
 import { setUserMe } from "@/redux/slices/authSlice";
+import { showToast } from "@/utils/toastify";
 
 export default function ModalUpdateAvatar() {
   const [avatar, setAvatar] = useState<any | null>(null);
@@ -25,7 +26,7 @@ export default function ModalUpdateAvatar() {
   // xử lý người dùng đăng nhập
   const handleUpdateAvatar = async () => {
     if (!currentUser) {
-      alert("Bạn hãy đăng nhập trước");
+      showToast("Bạn hãy đăng nhập trước", "error");
       return;
     }
 
@@ -34,14 +35,12 @@ export default function ModalUpdateAvatar() {
       const formData = new FormData();
       formData.append("avatar", avatar);
       const { data } = await uploadAvatar(currentUser._id, formData);
-      console.log(data.data);
-      
 
       dispatch(setUserMe({ ...currentUser, avatar: data.data }));
       dispatch(removeModalType());
     } catch (error) {
+      showToast("Cập nhật avatar thất bại", "error");
       console.log("error : ", error);
-      alert("thất bại");
     } finally {
       setIsLoading(false);
     }

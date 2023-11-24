@@ -4,6 +4,7 @@ import { formatDateTime } from "@/utils/common";
 import { IReview } from "@/utils/interface";
 import Image from "next/image";
 import Link from "next/link";
+import { Desc, Img } from ".";
 
 interface IProps {
   review: IReview;
@@ -49,18 +50,14 @@ export default function CardReview({ review }: IProps) {
         <span>/ 5 điểm</span>
       </div>
       {/* desc */}
-      <p className="text-lg">{review.content}</p>
+      <Desc>{review.content}</Desc>
 
       <div className="relative grid grid-cols-5 gap-2 my-4">
-        {review.images.slice(0, 6).map((image, index) => (
-          <div key={index} className="aspect-[1/1] relative">
-            <Image
-              src={`${baseURL}/reviews/image/${review._id}/${image}`}
-              alt="img"
-              fill
-              className="object-cover rounded-lg"
-            />
-          </div>
+        {review.images.slice(0, 5).map((image, index) => (
+          <Img
+            key={index}
+            src={`${baseURL}/reviews/image/${review._id}/${image}`}
+          />
         ))}
         {
           <>

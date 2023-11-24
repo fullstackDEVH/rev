@@ -30,26 +30,37 @@ export default function Header() {
     }
   }, [access_token]);
 
+  const handleOpenModalSearch = () => {
+    dispatch(setModalType("SEARCH_STORE"));
+  };
+
   return (
     <div className="px-px-header">
       <div className="flex items-center h-[110px] justify-between">
-        <Link href={'/'} className="relative w-[120px] h-[80px]">
+        <Link
+          href={"/"}
+          prefetch={false}
+          className="relative w-[120px] h-[80px]"
+        >
           <Image src="/logo.png" alt="logo" fill className="object-contain" />
         </Link>
 
         <div className="flex gap-5 h-[50px]">
           {/* input search */}
-          <div className="h-[60px] px-4 flex items-center justify-center gap-3 bg-[#f4f5f8] rounded-3xl hover:shadow-lg transition-all">
+          <div
+            className="relative mr-[60px] w-[500px] h-[60px] px-4 flex items-center gap-3 bg-[#f4f5f8] rounded-3xl hover:shadow-lg transition-all"
+            onClick={handleOpenModalSearch}
+          >
             <Image
               src="/search_grey.svg"
               alt="search_grey"
               width={24}
               height={24}
             />
-            <div className="p-2">
+            <div className="p-2 flex-1">
               <input
                 type="text"
-                className="bg-transparent p-2 h-full outline-none text-lg"
+                className="bg-transparent p-2 h-full outline-none w-full text-lg"
                 placeholder="Tìm kiếm địa điểm rì viu."
               />
             </div>

@@ -1,6 +1,7 @@
 import { baseURL } from "@/utils/api";
 import { IStore } from "@/utils/interface";
 import Image from "next/image";
+import Link from "next/link";
 
 interface IProps {
   store: IStore;
@@ -8,7 +9,7 @@ interface IProps {
 
 export default function CardTopStore({ store }: IProps) {
   return (
-    <div className="p-3 flex gap-2 hover:bg-input transition-colors rounded-xl cursor-pointer shadow-sm">
+    <Link href={`/store/${store._id}`} className="p-3 flex gap-2 hover:bg-input transition-colors rounded-xl cursor-pointer shadow-sm">
       <div className="relative h-full w-[30%] aspect-[1/1]">
         <Image
           src={`${baseURL}/stores/image/${store._id}/${store?.images[0]}`}
@@ -30,6 +31,6 @@ export default function CardTopStore({ store }: IProps) {
           <span>/ 5 điểm</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BtnCommon } from "@/components";
-import { CardComment } from "@/components/commons";
+import { CardComment, Desc } from "@/components/commons";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setModalType } from "@/redux/slices/modalSlice";
 import { baseURL } from "@/utils/api";
@@ -10,6 +10,7 @@ import { IComment, IReview } from "@/utils/interface";
 import { createComment } from "@/utils/proxy";
 import { useParams } from "next/navigation";
 import { ChangeEvent, useState } from "react";
+import { showToast } from "@/utils/toastify";
 
 interface IProps {
   reviewDetail?: IReview;
@@ -53,7 +54,7 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
 
   const handleCreateComment = async () => {
     if (!currentUser) {
-      alert("Hãy đăng nhập trước");
+      showToast("Bạn hãy đăng nhập trước", "error");
       dispatch(setModalType("LOGIN"));
       return;
     }
@@ -177,7 +178,7 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
 
         {/* title */}
         <h4 className="text-3xl font-bold my-3">{reviewDetail?.title}</h4>
-        <p className="text-lg">{reviewDetail?.content}</p>
+        <Desc>{reviewDetail?.content}</Desc>
       </div>
 
       {/* link to store */}
@@ -233,14 +234,27 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
       <div className="flex justify-between items-center py-6">
         {/* left */}
         <div className="flex gap-2">
-          <Image
-            src="/HEART.svg"
-            alt="HEART"
-            width={30}
-            height={30}
-            className="rounded-full"
-          />
-          <span className="text-lg">2 người yêu thích</span>
+          {currentUser &&
+          reviewDetail?.favourities.includes(currentUser?._id) ? (
+            <Image
+              src="/heart_red.svg"
+              alt="/heart_red.svg"
+              className="group-hover:-translate-y-1 transition-transform"
+              width={30}
+              height={30}
+            />
+          ) : (
+            <Image
+              src="/HEART.svg"
+              alt="/HEART.svg"
+              className="group-hover:-translate-y-1 transition-transform"
+              width={30}
+              height={30}
+            />
+          )}
+          <span className="text-lg">
+            {reviewDetail?.favourities.length} người yêu thích
+          </span>
         </div>
         {/* right */}
         <p className="text-lg font-semibold">

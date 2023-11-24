@@ -11,7 +11,8 @@ import { generateTimeOptions } from "@/utils/common";
 import { axiosAuthCookieMultiData } from "@/utils/api";
 import { uploadImagesStore } from "@/utils/proxy";
 import { useRouter } from "next/navigation";
-import { DISTRICTS } from "@/utils/data";
+import { CUISINE_NATIONAL_FOOD, DISTRICTS } from "@/utils/data";
+import { showToast } from "@/utils/toastify";
 
 interface IProvice {
   code: string;
@@ -123,19 +124,19 @@ export default function ModalStore() {
 
   const handleSubmit = async () => {
     if (!currentUser?._id) {
-      alert("Bạn chưa đăng nhập");
+      showToast("Bạn chưa đăng nhập", "error");
       dispatch(setModalType("LOGIN"));
       return;
     }
 
     if (!isFormValid()) {
-      alert("Hãy điền đầy đủ thông tin");
+      showToast("Hãy điền đầy đủ thông tin", "error");
       return;
     }
     const arrImgs = Array.from(storeData.images);
 
     if (arrImgs.length < 5) {
-      alert("Hãy chọn ít nhất 5 tấm ảnh");
+      showToast("Hãy chọn ít nhất 5 tấm ảnh", "error");
       return;
     }
 
@@ -156,10 +157,11 @@ export default function ModalStore() {
 
       await uploadImagesStore(data.data._id, formData);
 
-      alert("Tạo thành công");
+      showToast("Tạo thành công", "success");
       dispatch(setModalType(null));
       router.push(`/store/${data.data._id}`);
     } catch (error) {
+      showToast("Tạo thất bại rồi", "error");
       console.error("Error:", error);
     } finally {
       setIsLoading(false);

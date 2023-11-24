@@ -34,8 +34,8 @@ export const userSignUpApi = async (
   });
 };
 
-export const getStores = async () => {
-  return await axiosNonAuth.get("/stores");
+export const getStores = async (search?: string) => {
+  return await axiosNonAuth.get(`/stores${search ? `?search=${search}` : ""}`);
 };
 
 export const getStoreById = async (storeId: string) => {
@@ -104,4 +104,20 @@ export const getReviewsByNational = async (
 
 export const likeReview = async (reviewId: string, userId: string) => {
   return await axiosAuthCookie.patch(`/reviews/like/${reviewId}/${userId}`);
+};
+
+export const editReviewById = async (reviewId: string, body: any) => {
+  return await axiosAuthCookie.patch(`/reviews/${reviewId}`, body);
+};
+
+export const deleteReviewById = async (reviewId: string) => {
+  return await axiosAuthCookie.delete(`/reviews/${reviewId}`);
+};
+
+export const editStoreById = async (storeId: string, body: any) => {
+  return await axiosAuthCookie.patch(`/stores/${storeId}`, body);
+};
+
+export const deleteStoreById = async (storeId: string) => {
+  return await axiosAuthCookie.delete(`/stores/${storeId}`);
 };

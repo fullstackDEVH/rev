@@ -8,6 +8,7 @@ import { setModalType } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { axiosNonAuth } from "@/utils/api";
 import { uploadImagesReview } from "@/utils/proxy";
+import { showToast } from "@/utils/toastify";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -78,20 +79,20 @@ export default function WriteReview() {
 
   const handleSubmit = async () => {
     if (!currentUser?._id) {
-      alert("Bạn chưa đăng nhập");
+      showToast("Bạn chưa đăng nhập", "error");
       dispatch(setModalType("LOGIN"));
       return;
     }
 
     if (!isFormValid()) {
-      alert("Hãy điền đầy đủ thông tin");
+      showToast("Hãy điền đầy đủ thông tin", "error");
       return;
     }
     const { images, ...newReviewData } = reviewData;
     const arrImgs = Array.from(images);
 
     if (arrImgs.length < 1) {
-      alert("Hãy chọn ít nhất 1 tấm ảnh");
+      showToast("Hãy chọn ít nhất 1 tấm ảnh", "error");
       return;
     }
 
@@ -110,11 +111,12 @@ export default function WriteReview() {
       });
 
       await uploadImagesReview(data.data._id, formData);
+      showToast("Tạo thành công");
 
-      alert("Tạo thành công");
       dispatch(setModalType(null));
       router.push(`/store/${storeId}`);
     } catch (error) {
+      showToast("Tạo thất bại", "error");
       console.error("Error:", error);
     } finally {
       setIsLoading(false);

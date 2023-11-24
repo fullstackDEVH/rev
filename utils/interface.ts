@@ -6,6 +6,7 @@ export interface IUser {
   role: string;
   verify_otp: false;
   avatar: string;
+  totalReviews: number;
 }
 
 export interface ICreateStore {
@@ -21,6 +22,7 @@ export interface ICreateStore {
   price_lowest: string;
   province: string;
 }
+
 export interface IReadStore extends ICreateStore {
   _id: string;
   owner: IUser;
@@ -94,12 +96,27 @@ export interface ICreateComment {
   content: string;
 }
 
+export interface IStoreRead {
+  name: string;
+  slogan: string;
+  cuisine_national: string;
+  open_time: string;
+  close_time: string;
+  address: string;
+  images: FileList;
+  phone_number: string;
+  price_highest: string;
+  price_lowest: string;
+  province: string;
+  _id: string;
+}
+
 export interface IReviewCuisine {
   author: IUser;
   comments: string[];
   images: string[];
   favourities: string[];
-  store: string;
+  store: IStoreRead;
   title: string;
   content: string;
   _id: string;

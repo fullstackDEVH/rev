@@ -11,6 +11,7 @@ import { baseURL } from "@/utils/api";
 import LoadingScreen from "@/components/commons/loading";
 import CardRevew from "@/components/commons/cardReview";
 import { StoreLeft, StoreRight } from "@/components/pages/storeDetail";
+import { showToast } from "@/utils/toastify";
 
 export default function StoreDetail() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function StoreDetail() {
         const { data } = await getStoreById(storeId);
         setStoreDetail(data.data);
       } catch (error: any) {
-        alert(`${error?.response?.data?.error ?? "Lỗi rồi"}`);
+        showToast("Thất bại", "error");
       } finally {
         setIsLoading(false);
       }

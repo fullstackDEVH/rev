@@ -1,5 +1,6 @@
 "use client";
 
+import { BtnCommon } from "@/components";
 import { Img } from "@/components/commons";
 import Desc from "@/components/commons/desc";
 import LoadingScreen from "@/components/commons/loading";
@@ -125,7 +126,7 @@ export default function ReviewsCuisineNational() {
             <h3 className="text-3xl text-txt-primary font-semibold my-3">
               {cuisineNationalName}
             </h3>
-            <p>
+            <p className="text-xl">
               Xem ngay cộng đồng Riviu.vn ✅, thật tiếc nếu bỏ qua{" "}
               {cuisineNationalName}
             </p>
@@ -135,33 +136,45 @@ export default function ReviewsCuisineNational() {
         {/* list */}
         <div className="flex gap-4 my-6">
           <div className="w-[30%]">
-            <div className="bg-white p-4 shadow-lg rounded-xl sticky top-10">
-              <h3 className="text-txt-second text-xl font-bold pb-3">
-                Đánh giá
-              </h3>
-              <div className="border-t pt-3 grid grid-cols-3 gap-4">
-                {Array.from({ length: 5 }).map((_, ind) => (
-                  <div
-                    className={`px-4 py-2 flex items-center gap-2 border rounded-xl cursor-pointer transition-all ${
-                      rating &&
-                      !isNaN(+rating) &&
-                      ind + 1 === +rating &&
-                      "bg-primary text-white"
-                    }`}
-                    key={ind}
-                    onClick={() =>
-                      handleChangeSearchParams("rating", `${ind + 1}`)
-                    }
-                  >
-                    <span className="text-inherit text-xl">{ind + 1}</span>
-                    <Image
-                      src="/star_red.svg"
-                      alt="star"
-                      width={24}
-                      height={24}
-                    />
-                  </div>
-                ))}
+            {/* filter */}
+            <div className="sticky top-10">
+              <div className="bg-white p-4 1-lg rounded-xl">
+                <h3 className="text-txt-second text-xl font-bold pb-3">
+                  Đánh giá
+                </h3>
+                <div className="border-t pt-3 grid grid-cols-3 gap-4">
+                  {Array.from({ length: 5 }).map((_, ind) => (
+                    <div
+                      className={`px-4 py-2 flex items-center gap-2 border rounded-xl cursor-pointer transition-all ${
+                        rating &&
+                        !isNaN(+rating) &&
+                        ind + 1 === +rating &&
+                        "bg-primary text-white"
+                      }`}
+                      key={ind}
+                      onClick={() =>
+                        handleChangeSearchParams("rating", `${ind + 1}`)
+                      }
+                    >
+                      <span className="text-inherit text-xl">{ind + 1}</span>
+                      <Image
+                        src="/star_red.svg"
+                        alt="star"
+                        width={24}
+                        height={24}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* btn reset */}
+              <div className="mt-6">
+                <BtnCommon
+                  title="Đặt lại bộ tìm kiếm"
+                  handleClick={handleClearSearchParams}
+                  commonStyles=""
+                />
               </div>
             </div>
           </div>
@@ -240,8 +253,15 @@ function Card({ review, handleLikeReviewPost }: ICard) {
         ))}
       </div>
 
+      <Link
+        href={`/store/${review.store._id}`}
+        className="block text-xl font-semibold text-primary py-4 hover:underline cursor-pointer"
+      >
+        # {review.store.name}
+      </Link>
+
       {/* actions */}
-      <div className="flex pt-4 gap-6">
+      <div className="flex pt-4 gap-6 border-t">
         <div
           className="flex items-center gap-2 cursor-pointer group"
           onClick={() => handleLikeReviewPost(review._id)}

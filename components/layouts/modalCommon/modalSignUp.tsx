@@ -7,6 +7,7 @@ import { removeModalType, setModalType } from "@/redux/slices/modalSlice";
 import Image from "next/image";
 import { useState } from "react";
 import { userSignUpApi } from "@/utils/proxy";
+import { showToast } from "@/utils/toastify";
 
 export default function ModalSignUp() {
   const [userLogin, setUserLogin] = useState({
@@ -31,17 +32,17 @@ export default function ModalSignUp() {
       setIsLoading(true);
       const { email, password, name } = userLogin;
       if (!email || !password || !name) {
-        alert("Hãy nhập đầy đủ thông để đăng nhập");
+        showToast("Hãy nhập đầy đủ thông để đăng nhập", "error");
         return;
       }
 
       await userSignUpApi(email, password, name);
 
       dispatch(setModalType("LOGIN"));
-      alert("Thành công");
+      showToast("Thành công");
     } catch (error) {
       console.log("error : ", error);
-      alert("thất bại");
+      showToast("thất bại", "error");
     } finally {
       setIsLoading(false);
     }

@@ -9,6 +9,7 @@ import { useState } from "react";
 import { userLogin as userLoginApi } from "@/utils/proxy";
 import { setCurrentUserLogin } from "@/redux/slices/authSlice";
 import { saveAuthToken } from "@/utils/api";
+import { showToast } from "@/utils/toastify";
 
 export default function ModalLogin() {
   const [userLogin, setUserLogin] = useState({
@@ -33,7 +34,7 @@ export default function ModalLogin() {
       setIsLoading(true);
       const { email, password } = userLogin;
       if (!email || !password) {
-        alert("Hãy nhập đầy đủ thông để đăng nhập");
+        showToast("Hãy nhập đầy đủ thông để đăng nhập");
         return;
       }
       const { data } = await userLoginApi(email, password);
@@ -47,10 +48,10 @@ export default function ModalLogin() {
       saveAuthToken(data.token);
 
       dispatch(removeModalType());
-      alert("Thành công");
+      showToast("Thành công");
     } catch (error) {
       console.log("error : ", error);
-      alert("thất bại");
+      showToast("Hãy kiểm tra lại email và mật khẩu");
     } finally {
       setIsLoading(false);
     }

@@ -7,6 +7,7 @@ import ModalLogin from "./modalLogin";
 import ModalSignUp from "./modalSignUp";
 import ModalStore from "./modalStore";
 import ModalUpdateAvatar from "./modalUpdateAvatar";
+import ModalSearchStore from "./modalSearchStore";
 
 export default function ModalProvider() {
   const { typeModal } = useAppSelector((state) => state.modal);
@@ -16,6 +17,7 @@ export default function ModalProvider() {
     SIGN_UP: <ModalSignUp />,
     CREATE_STORE: <ModalStore />,
     UPDATE_AVATAR: <ModalUpdateAvatar />,
+    SEARCH_STORE: <ModalSearchStore />,
   };
 
   return typeModal ? <Portal>{modalComponents[typeModal]}</Portal> : null;

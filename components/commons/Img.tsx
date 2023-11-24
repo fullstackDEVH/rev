@@ -8,7 +8,7 @@ interface IProps {
 export default function Img({ src = "/banner-main.png", handleClick }: IProps) {
   return (
     <div
-      className="aspect-[1/1] rounded-xl overflow-hidden relative cursor-pointer"
+      className="aspect-[1/1] rounded-xl overflow-hidden relative cursor-pointer shadow-md"
       onClick={handleClick}
     >
       <Image
