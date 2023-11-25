@@ -5,6 +5,9 @@ import { IReview } from "@/utils/interface";
 import Image from "next/image";
 import Link from "next/link";
 import { Desc, Img } from ".";
+import { showToast } from "@/utils/toastify";
+import { likeReview } from "@/utils/proxy";
+import { useRouter } from "next/navigation";
 
 interface IProps {
   review: IReview;
@@ -12,6 +15,22 @@ interface IProps {
 
 export default function CardReview({ review }: IProps) {
   const { currentUser } = useAppSelector((state) => state.auth);
+  const router = useRouter();
+
+  const handleLikeReviewPost = async () => {
+    if (!currentUser) {
+      showToast("Hãy đăng nhập để sử dụng chức năng này", "error");
+      return;
+    }
+
+    try {
+      await likeReview(review._id, currentUser._id);
+      showToast("Thay đổi trạng thái thành công", "success");
+      router.refresh();
+    } catch (error) {
+      showToast("Lỗi trong quá trình xử lý", "error");
+    }
+  };
 
   return (
     <div className="shadow-lg bg-white rounded-2xl p-6 hover:shadow-2xl transition-shadow cursor-pointer">
@@ -71,14 +90,26 @@ export default function CardReview({ review }: IProps) {
       </div>
 
       <div className="flex items-center gap-6">
-        <div className="flex gap-2 items-center">
-          <Image
-            src={`/heart_black.svg`}
-            alt="heart_black"
-            width={34}
-            height={34}
-          />
-          <span className="text-lg font-medium">77</span>
+        <div className="flex gap-2 items-center" onClick={handleLikeReviewPost}>
+          {currentUser && review.favourities.includes(currentUser?._id) ? (
+            <Image
+              src="/heart_red.svg"
+              alt="/heart_red.svg"
+              className="group-hover:-translate-y-1 transition-transform"
+              width={30}
+              height={30}
+            />
+          ) : (
+            <Image
+              src="/HEART.svg"
+              alt="/HEART.svg"
+              className="group-hover:-translate-y-1 transition-transform"
+              width={30}
+              height={30}
+            />
+          )}
+
+          <span className="text-lg font-medium">{review.favourities.length}</span>
         </div>
         <Link
           href={`/review/${review._id}`}

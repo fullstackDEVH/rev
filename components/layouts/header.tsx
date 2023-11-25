@@ -48,7 +48,7 @@ export default function Header() {
         <div className="flex gap-5 h-[50px]">
           {/* input search */}
           <div
-            className="relative mr-[60px] w-[500px] h-[60px] px-4 flex items-center gap-3 bg-[#f4f5f8] rounded-3xl hover:shadow-lg transition-all"
+            className="relative mr-[60px] w-[300px] h-[60px] px-4 flex items-center gap-3 bg-[#f4f5f8] rounded-3xl hover:shadow-lg transition-all"
             onClick={handleOpenModalSearch}
           >
             <Image

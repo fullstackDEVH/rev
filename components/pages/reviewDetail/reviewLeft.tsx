@@ -7,8 +7,8 @@ import { setModalType } from "@/redux/slices/modalSlice";
 import { baseURL } from "@/utils/api";
 import { formatDateTime } from "@/utils/common";
 import { IComment, IReview } from "@/utils/interface";
-import { createComment } from "@/utils/proxy";
-import { useParams } from "next/navigation";
+import { createComment, likeReview } from "@/utils/proxy";
+import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { showToast } from "@/utils/toastify";
 
@@ -25,17 +25,17 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
   const { currentUser } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
-
+  const router = useRouter();
   const params = useParams();
   const reviewId = params.reviewId as string;
 
   const totalRating = reviewDetail?.rating
     ? (reviewDetail?.rating.food_safety +
-        reviewDetail?.rating.price +
-        reviewDetail?.rating.serve +
-        reviewDetail?.rating.smell +
-        reviewDetail?.rating.space) /
-      5
+      reviewDetail?.rating.price +
+      reviewDetail?.rating.serve +
+      reviewDetail?.rating.smell +
+      reviewDetail?.rating.space) /
+    5
     : 0;
 
   const handleNextImg = () => {
@@ -82,6 +82,23 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setContentCommen(e.target.value);
+  };
+
+  const handleLikeReviewPost = async () => {
+    if (!currentUser) {
+      showToast("Hãy đăng nhập để sử dụng chức năng này", "error");
+      return;
+    }
+
+    if (!reviewDetail) return;
+
+    try {
+      await likeReview(reviewDetail?._id, currentUser._id);
+      showToast("Thay đổi trạng thái thành công", "success");
+      router.refresh();
+    } catch (error) {
+      showToast("Lỗi trong quá trình xử lý", "error");
+    }
   };
 
   return (
@@ -235,7 +252,7 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
         {/* left */}
         <div className="flex gap-2">
           {currentUser &&
-          reviewDetail?.favourities.includes(currentUser?._id) ? (
+            reviewDetail?.favourities.includes(currentUser?._id) ? (
             <Image
               src="/heart_red.svg"
               alt="/heart_red.svg"
