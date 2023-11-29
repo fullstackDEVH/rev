@@ -195,7 +195,7 @@ export default function StoreDetail() {
 
           {/* images */}
           <div>
-            <div className="grid grid-cols-4 w-full aspect-[3/1] gap-3 relative">
+            <div className="grid grid-cols-4 w-full shadow-lg aspect-[3/1] gap-3 relative overflow-hidden">
               <>
                 {storeDetail && storeDetail?.foundStore?.images.length > 5 ? (
                   <p className="absolute z-10 bg-[#00000070] p-4 text-2xl font-medium rounded-full bottom-6 left-6 text-white">
@@ -204,7 +204,7 @@ export default function StoreDetail() {
                 ) : null}
               </>
               {storeDetail?.foundStore.images
-                .slice(1, 7)
+                .slice(0, 5)
                 .map((image, index) => (
                   <div
                     className={`relative ${
@@ -218,7 +218,7 @@ export default function StoreDetail() {
                       src={`${baseURL}/stores/image/${storeId}/${image}`}
                       alt={index + ""}
                       fill
-                      className="object-cover"
+                      className="object-cover shadow-lg"
                     />
                   </div>
                 ))}
@@ -227,7 +227,7 @@ export default function StoreDetail() {
         </div>
 
         {/* body */}
-        <div className="flex gap-8 py-6">
+        <div className="flex gap-8 py-6 mt-6">
           <StoreLeft
             storeId={storeId}
             reviews={storeDetail?.foundReviews ?? []}

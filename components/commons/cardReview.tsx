@@ -44,8 +44,8 @@ export default function CardReview({ review }: IProps) {
           }
           alt="avatar"
           width={60}
-          height={60}
-          className="rounded-full object-cover"
+          height={40}
+          className="rounded-full object-cover overflow-hidden"
         />
         <div className="grid grid-cols-1 gap-1">
           <h2 className="text-xl font-semibold">{review.author.name}</h2>

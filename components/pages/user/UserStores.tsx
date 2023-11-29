@@ -71,6 +71,7 @@ function Card({ store }: ICard) {
       showToast("Không thể xoá", "error");
     } finally {
       setIsLoading(false);
+      handleClosePopup();
     }
   };
 

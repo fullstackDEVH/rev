@@ -71,6 +71,7 @@ function Card({ review }: ICard) {
       showToast("Không thể xoá", "error");
     } finally {
       setIsLoading(false);
+      handleClosePopup();
     }
   };
 
